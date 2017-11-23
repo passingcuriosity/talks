@@ -1,15 +1,18 @@
 \documentclass[a4paper]{article}
 \usepackage{cite}
+\usepackage{amsmath}
 
 \title{Some thoughts after an intro to Cubical Type Theory}
 \author{Thomas Sutton}
 \date{23 November 2017}
 
-\newcommand{\labs}[2]{{\lambda #1 . #2}}
-\newcommand{\lapp}[2]{#1 \: #2}
+\newcommand{\fun}[3]{(#1 : #2) \rightarrow #3}
+\newcommand{\labs}[2]{(\lambda #1 . #2)}
+\newcommand{\lapp}[2]{(#1 \: #2)}
 
 \newcommand{\pabs}[2]{{\langle #1 \rangle}.{#2}}
 \newcommand{\Path}[3]{{Path\:{#1}\:{#2}\:{#3}}}
+
 
 \begin{document}
 
@@ -18,11 +21,11 @@
 \section{Introduction}
 I saw Ben Lippmeier give a short introduction to cubical type
 theory\cite{DBLP:journals/corr/CohenCHM16} at the 100th FP-Syd meeting on 22 November
-2017. Here are some thoughs.
+2017. Here are some thoughts.
 
 \section{Extension equivalence of functions}
 
-$\forall f g. (\forall x. f x = g x) \leftarrow f = g$
+$\forall f g. (\forall x. f x = g x) \rightarrow f = g$
 
 \section{Equality and equivalence}
 
@@ -51,7 +54,25 @@ $$t,u,A,B ::= x | \labs{x}{t} | \lapp{t}{u} $$
 $$\Path{A}{t}{u}$$
 $$\pabs{i}{t}$$
 
-\subsection{Whither primative paths}
+\section{Function extensional}
+
+We'll give a proof of the theorem $\forall f g. (\forall x. f x = g x) \rightarrow f = g$
+as a term:
+
+\begin{align}
+  \Gamma &\vdash f : \fun{x}{A}{B} \\
+  \Gamma &\vdash g : \fun{x}{A}{B} \\
+  \Gamma &\vdash p : \fun{x}{A}{\Path{B}{\lapp{f}{x}}{\lapp{g}{x}}} \\
+  \cline{1-2}
+  \Gamma &\vdash \pabs{i}{\labs{x}{
+  }} : \Path{(\fun{x}{A}{B})}{f}{g}
+\end{align}
+
+We read this as: ``given f and g with the appropriate function type
+and a function which, given $x$, constructs a path between $f x$ and
+$g x$, we can produce a path between $f$ and $x$''.
+
+\section{Whither primative paths}
 
 The question that immediately occured to me during the talk is ``where
 are the primitive paths?'' For example, other systems I'm familiar
