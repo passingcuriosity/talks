@@ -1,0 +1,68 @@
+\documentclass[a4paper]{article}
+
+\title{Some thoughts after an intro to Cubical Type Theory}
+\author{Thomas Sutton}
+\date{23 November 2017}
+
+\newcommand{\labs}[2]{{\lambda #1 . #2}}
+\newcommand{\lapp}[2]{#1 \: #2}
+
+\newcommand{\pabs}[2]{{\langle #1 \rangle}.{#2}}
+\newcommand{\Path}[3]{{Path\:{#1}\:{#2}\:{#3}}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+I saw Ben Lippmeier give a short introduction to cubical type
+theory\cite{ctt} at the 100th FP-Syd meeting on 22 November
+2017. Here are some thoughs.
+
+\section{Extension equivalence of functions}
+
+$\forall f g. (\forall x. f x = g x) \leftarrow f = g$
+
+\section{Equality and equivalence}
+
+\begin{itemize}
+\item Syntactic
+\item Definitional
+\item
+\item
+\item Extensional
+\end{itemize}
+
+\section{A fragment of cubical type theory}
+
+We have indexes with which we describe the ends of paths. There are
+{\em not} first class parts of the language -- the only thing we can
+do with them is feed them to path abstractions.
+
+$$i ::= i | 1 | 0 $$
+
+With indices defined we can describe the rest of the language. This
+fragment is fairly standard as these things go, you can feel free to
+assume whatever extensions along the lines of natural numbers, etc.
+
+$$t,u,A,B ::= x | \labs{x}{t} | \lapp{t}{u} $$
+
+$$\Path{A}{t}{u}$$
+$$\pabs{i}{t}$$
+
+\subsection{Whither primative paths}
+
+The question that immediately occured to me during the talk is ``where
+are the primitive paths?'' For example, other systems I'm familiar
+with often have for reflexive equality of a term with itself, but
+there are no such terms here.
+
+After a little though later on it became obvious that a path from $t$
+to $t$ is just a path abstraction which ignores the index:
+
+$$
+\frac{\Gamma \vdash t : A}{\Gamma \vdash \pabs{i}{t} : \Path{A}{t}{t}}
+$$
+
+
+\end{document}
