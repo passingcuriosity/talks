@@ -11,6 +11,7 @@
 \newcommand{\lapp}[2]{(#1 \: #2)}
 
 \newcommand{\pabs}[2]{{\langle #1 \rangle}.{#2}}
+\newcommand{\papp}[2]{(#1 \: #2)}
 \newcommand{\Path}[3]{{Path\:{#1}\:{#2}\:{#3}}}
 
 
@@ -56,8 +57,13 @@ $$\pabs{i}{t}$$
 
 \section{Function extensional}
 
-We'll give a proof of the theorem $\forall f g. (\forall x. f x = g x) \rightarrow f = g$
-as a term:
+We'll give a proof of the theorem $\forall f g. (\forall x. f x = g x)
+\rightarrow f = g$ by translating it into a term of the appropriate
+type. First we'll translate the $forall f g.$ into assumptions
+asserting that they are functions of the appropriate type, then the
+antecedant as an assumption of a function which constructs paths
+equating applications of the two function, and finally the conclusion:
+a term of the path type equating the $f$ and $g$.
 
 \begin{align}
   \Gamma &\vdash f : \fun{x}{A}{B} \\
@@ -65,12 +71,34 @@ as a term:
   \Gamma &\vdash p : \fun{x}{A}{\Path{B}{\lapp{f}{x}}{\lapp{g}{x}}} \\
   \cline{1-2}
   \Gamma &\vdash \pabs{i}{\labs{x}{
+      \papp{\lapp{p}{x}}{i}
   }} : \Path{(\fun{x}{A}{B})}{f}{g}
 \end{align}
 
 We read this as: ``given f and g with the appropriate function type
 and a function which, given $x$, constructs a path between $f x$ and
-$g x$, we can produce a path between $f$ and $x$''.
+$g x$, we can produce a path between $f$ and $x$''. The path term
+produced is not too hard to understand:
+
+\begin{itemize}
+  \item $\pabs{i}{t}$ because it's a path.
+  \item $\pabs{i}{\labs{x}{t}}$ because it's between functions.
+  \item $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$ because the value
+    at $x$ is the value of the appropriate end of $p$.
+\end{itemize}
+
+\begin{itemize}
+  \item It's a $Path$ but $\lapp{p}{t}$ is the wrong type so the
+    outermost constructor must be $\pabs{i}{t}$.
+  \item The $Path$ has functions as it's endpoints ($A =
+    \fun{x}{A}{B}$) so body of the path abstraction is a function
+    abstration: $\pabs{i}{\labs{x}{t}}$.
+  \item The function returns the application of $\lapp{f}{x}$ at one
+    end of the path and $\lapp{g}{x}$ at the other. The existing path
+    $p$ does exactly this, so the body will construct a path using
+    $\lapp{p}{x}$ and then pick the end we're interested in: $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$
+\end{itemize}
+
 
 \section{Whither primative paths}
 
