@@ -170,7 +170,6 @@ But what about recursive structures?
 There are plenty of structures where we want to have the recursive behaviour we
 just banned.
 
-
 ---
 
 # Problem
@@ -185,38 +184,61 @@ Ignoring mutable data this happens when we define a data structure using a
 fixed point (either an explicit operator or implicitly in a language like
 Haskell).
 
-The problem arised when we encounter a fixed point in the data structure
+The problem arose when we encounter a fixed point in the data structure
 and handle it as though it is any old point.
 
 # Solution
 
-So let's reify the fixed points we use when defining these data structures into
-the structures themselves.
+So let's find a way to represent and manipulate fixed points in our data
+structures appropriately.
 
 We could do it by adding a `Loop` constructor to `Stream` and `Tree` and
 `Graph` and ...
 
-But we're at a Simple Machines techtalk and I haven't said the word "free"
-even once yet!
+But that seems a bit boring (and laborious) so instead we'll use a generic
+representation based on parametric higher order abstract syntax (PHOAS) to
+handle the tricky bits together with some simple functors to specialise it
+to represent streams, trees, graphs, etc.
 
-# Free does recursion
+# Free
+
+Here is the `Free` data type from Haskell's standard library.
 
 ```haskell
-data Free f a
-  = Pure a
-  | Free (f (Free f a))
+data Free f a where
+  Pure :: a -> Free f a
+  Free :: f (Free f a) -> Free f a
 ```
 
-# Free does recursion
+(Don't worry, I'm only using GADT syntax to help make some things more
+obvious.)
+
+# Free the trees
 
 When `f` is an algebraic data type and we obey our stricture about "not doing
 that then", values of type `Free f a` are trees:
 
-* Leaves are `Pure` constructors which carry `a` values.
+* The leaves have an `a` value wrapped in a `Pure` constructor.
 
-* Nodes are `Free` constructors which contain `f`s which contain the sub-trees.
+* The nodes have an `f` of sub-trees wrapped in a `Free` constructor.
 
-This gives us our "definitely not loopy" structures -- they are all tree-ish.
+This gives us a "definitely not loopy" structure -- they are all tree-ish --
+but not the one we're after.
+
+# Free variables
+
+It's worth thinking about what we are about. We want:
+
+1. To describe data structures that are tree-ish; and 
+
+2. which contain values; and
+
+3. references to other parts of the structure; and
+
+4. the reference are *valid* w.r.t. to the structural invariants.
+
+What does that last bit mean? We want references that **definitely** point
+to another part of the structure.
 
 # Adding recursion for Free
 
