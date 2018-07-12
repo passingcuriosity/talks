@@ -154,27 +154,22 @@ But the problem occurs in any language with one or more of:
 
 # Why am I talking about this?
 
-Let's just not do that then! We can (fast and loose) assume that we don't
-construct values that have these problems. Done!
+Let's just not do that then!
 
-```haskell
-fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
-
-ones = 1 : ones
-```
-
-`fibs` is ok, `ones` is not.
+We can (fast and loose) assume that we don't construct values that have these
+problems. Done!
 
 ---
 
 But what about recursive structures?
 
-- Streams
-- Trees
-- Graphs
+* Streams
+* Trees
+* Graphs
 
 There are plenty of structures where we want to have the recursive behaviour we
 just banned.
+
 
 ---
 
@@ -203,3 +198,38 @@ We could do it by adding a `Loop` constructor to `Stream` and `Tree` and
 
 But we're at a Simple Machines techtalk and I haven't said the word "free"
 even once yet!
+
+# Free does recursion
+
+```haskell
+data Free f a
+  = Pure a
+  | Free (f (Free f a))
+```
+
+# Free does recursion
+
+When `f` is an algebraic data type and we obey our stricture about "not doing
+that then", values of type `Free f a` are trees:
+
+* Leaves are `Pure` constructors which carry `a` values.
+
+* Nodes are `Free` constructors which contain `f`s which contain the sub-trees.
+
+This gives us our "definitely not loopy" structures -- they are all tree-ish.
+
+# Adding recursion for Free
+
+```haskell
+fix :: (a -> a) -> a
+mfix :: (a -> m a) -> m a
+```
+
+```haskell
+data Free f a where
+  Pure ::  a                  -> Free f a  -- ^ A leaf
+  Free ::       f (Free f a)  -> Free f a  -- ^ An f of branches
+  Fix  :: (a -> f (Free f a)) -> Free f a  -- ^ Given a 
+```
+
+But be careful. We've moved from 
