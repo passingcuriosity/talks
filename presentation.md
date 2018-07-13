@@ -229,16 +229,17 @@ but not the one we're after.
 
 It's worth thinking about what we are about. We want:
 
-1. To describe data structures that are tree-ish; and 
+1. To describe data structures that are tree-ish; and
 
-2. which contain values; and
+2. maybe carrying values at certain places in the structure; and
 
-3. references to other parts of the structure; and
+3. containing references to other parts of the structure; and
 
-4. the reference are *valid* w.r.t. to the structural invariants.
+4. maintaining some structural invariants when making these references.
 
 What does that last bit mean? We want references that **definitely** point
-to another part of the structure.
+to another part of the structure. Which is to say it's impossible to "forge"
+these recursive references.
 
 # Adding recursion for Free
 
