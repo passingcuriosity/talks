@@ -5,15 +5,32 @@ author: Thomas Sutton
 date: 25 July 2018
 ---
 
-# Question
+# Introduction
+
+- Algebraic data types...
+- ...for trees.
+- ...for graphs.
+- Problems.
+- Solutions.
+- A library.
+
+# Algebraic Data Types
+
+- We're all familiar with algebraic data types
+
+## Recursive types give trees
+
+## Recursive values give graphs
+
+# Problems
+
+## Given an ADT
 
 Suppose you have a recursive algebraic data type with a single parameter:
 
 ```haskell
 data Foo a = Nowt | Summat a (Foo a)
 ```
-
----
 
 And it has an instance of `Functor` and, further more, it's the obvious
 and "correct" instance:
@@ -22,9 +39,7 @@ and "correct" instance:
 deriving instance Functor Foo
 ```
 
----
-
-Suppose that `foo` is a value of this type and it's in normal form: we've
+And that `foo` is a value of this type and it's in normal form: we've
 fully evaluated the whole data structure and it's sat there in memory.
 
 ```haskell
@@ -32,27 +47,13 @@ foo :: Foo String
 foo = ...
 ```
 
----
-
-What does this do (when fully evaluated)?
-
-```haskell
-map f foo
-```
-
-1. How many times will we apply `f`?
-
-2. How much memory will we allocate?
-
-3. What shape is the resulting data structure?
-
----
-
-What does this do (when fully evaluated)?
+## What does this do?
 
 ```haskell
 let bar = map f foo
 ```
+
+When we "fully evaluate" `bar`:
 
 1. How many times will we apply `f`?
 
@@ -61,6 +62,22 @@ let bar = map f foo
 3. What shape is the resulting data structure?
 
 4. Will it even terminate?
+
+5. Can you tell before hand?
+
+## Sharing
+
+The appropriate answer, of course, is determined by the *paths* through
+the structure (and not by the shape, the number of different memory locations,
+etc.)
+
+When we have a non-recursive 
+## Observability
+
+- Let's just
+
+## Termination
+
 
 ---
 
