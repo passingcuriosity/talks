@@ -21,14 +21,17 @@
 \usepackage{parskip}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={So you think you can map {[}safely{]}},
+            pdftitle={So you think you can map},
             pdfauthor={Thomas Sutton},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{fancyvrb}
-\usepackage[backend=bibtex8]{biblatex}
+\usepackage[backend=biber,
+style=alphabetic,
+citestyle=authoryear
+]{biblatex}
 \addbibresource{presentation.bib}
 
 
@@ -692,7 +695,7 @@ fixVal v f = if v == v' then v else fixVal v' f
 \section{Conclusion}
 
 There's a lot more detail about this approach to graphs (including the ``add recursion to
-each structure'' step that I skipped over) in \cite{Chlipala:2008:PHA:1411204.1411226}.
+each structure'' step that I skipped over) in \cite{Oliveira:2012:FPS:2364527.2364541}.
 
 For more details on parametic higher-order abstract syntax, see \cite{Chlipala:2008:PHA:1411204.1411226}
 

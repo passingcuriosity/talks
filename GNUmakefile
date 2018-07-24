@@ -9,9 +9,13 @@ ALL := $(wildcard *.md)
 
 %.pdf: %.tex GNUmakefile
 	pdflatex $<
+	biber $(<:.tex=)
+	pdflatex $<
 	pdflatex $<
 
 all: presentation2.pdf recursion.pdf
+
+presentation2.pdf: presentation2.tex presentation.bib GNUmakefile
 
 recursion.pdf: recursion.tex $(wildcard *.hs)
 
