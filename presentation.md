@@ -165,11 +165,6 @@ What?
 
 ---
 
-```haskell
-ones :: [Int]
-ones = 1 : ones
-```
-
 We have exactly one cons cell and exactly one `Int`. But we have value
 recursion.
 
