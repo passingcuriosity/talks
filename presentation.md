@@ -1,6 +1,7 @@
 ---
 title: So you think you can map [safely]
-subtitle: "And: a Fix for Free"
+subtitle: "Or: a Fix for Free"
+subsubtitle: "Or: Functional Programming with Structured Graphs"
 author: Thomas Sutton
 date: 25 July 2018
 ---
@@ -12,45 +13,94 @@ date: 25 July 2018
 - ...for graphs.
 - Problems.
 - Solutions.
-- A library.
 
 # Algebraic Data Types
 
-- We're all familiar with algebraic data types
+Most of us are familiar with algebraic data types: data types composed of
+sums of products, probably with labels on the various bits and pieces so we
+can easily tell them apart.
 
-## Recursive types give trees
+I'll use Haskell syntax because it's objectively better (and the GADT syntax
+too):
 
-## Recursive values give graphs
+```haskell
+data Operation a where
+  Dab     :: Operation a
+  Krump   :: Int -> Operation a
+  Shuffle :: [a] -> Operation a
+  Robot   :: Repr a => a -> Operation a
+```
+
+## Recursive *types* give trees
+
+We're also familiar with recursive types to define structures which can contain
+other instances of themselves: lists, trees, etc.
+
+```haskell
+data List a where
+  Nil  :: List a
+  Cons :: a -> List a -> List a
+```
+
+These define trees. "*Inside*" a `Cons` value is an `a` and another ("smaller")
+`List a` value.
+
+## Recursive *values* give graphs
+
+But many languages have a constructs which allow us to construct recursive
+values: values which are defined *in terms of themselves*. This shouldn't be
+surprising (indeed, recursive type definitions work the same way).
+
+- `letrec` in Scheme, Racket, etc.
+- `let rec` in Ocaml, `val rec` in SML.
+- `fix` in various languages.
+- pretty much every binding form in Haskell.
+
+## "Infinite" lists
+
+```haskell
+ones :: List Int
+ones = Cons 1 ones
+```
+
+## "Infinite" binary trees
+
+```haskell
+data Tree a where
+  Leaf :: Tree a
+  Branch :: Tree a -> Tree a -> Tree a
+
+tree :: Tree
+tree = Branch tree tree
+```
+
+## Self-referential definitions
+
+```haskell
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+```
+
+## Tying the knot
+
+How do you have two-way links without mutable references? Fixed points!
+
+```haskell
+data Tree where
+  Tree :: Maybe Tree -> Maybe Tree -> Maybe Tree
+
+tree = Tree Nothing (Just left) (Just right)
+  where
+    left = Tree (Just parent) Nothing Nothing
+    right = Tree (Just parent) Nothing Nothing
+```
 
 # Problems
-
-## Given an ADT
-
-Suppose you have a recursive algebraic data type with a single parameter:
-
-```haskell
-data Foo a = Nowt | Summat a (Foo a)
-```
-
-And it has an instance of `Functor` and, further more, it's the obvious
-and "correct" instance:
-
-```haskell
-deriving instance Functor Foo
-```
-
-And that `foo` is a value of this type and it's in normal form: we've
-fully evaluated the whole data structure and it's sat there in memory.
-
-```haskell
-foo :: Foo String
-foo = ...
-```
 
 ## What does this do?
 
 ```haskell
-let bar = map f foo
+let foo = ... :: [Int]
+in map f foo
 ```
 
 When we "fully evaluate" `bar`:
@@ -65,21 +115,20 @@ When we "fully evaluate" `bar`:
 
 5. Can you tell before hand?
 
-## Sharing
+## Who knows?
 
-The appropriate answer, of course, is determined by the *paths* through
-the structure (and not by the shape, the number of different memory locations,
-etc.)
+Even when we know that `foo` is in normal form, that `map` is just `map`, and
+that `f` is just the identity function, we don't know whether `map id foo` will
+terminate, whether the result (in normal form) will fit in memory, etc.
 
-When we have a non-recursive 
-## Observability
+Similar problems occur with `fold`s and various other recursive functions.
 
-- Let's just
+## Then answer
 
-## Termination
-
-
----
+If we think about it a little bit, the answer to most of the questions we
+asked is not related to the "size" of `foo` -- to the number of `Int`s in
+memory --  but the number of *paths* from `foo`, following pointers, to
+`Int`s.
 
 1. The answer is not "`f` is called once per `String` value in memory".
 
