@@ -28,6 +28,9 @@
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{fancyvrb}
+\usepackage[backend=bibtex8]{biblatex}
+\addbibresource{presentation.bib}
+
 
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes.multipart,chains,arrows}
@@ -441,8 +444,8 @@ Here is the @Free@ data type from Haskell's standard library.
 
 \begin{code}
 data Free f a where
-  Pure :: a -> Free f a
-  Free :: f (Free f a) -> Free f a
+  Pure  :: a             ->  Free f a
+  Free  :: f (Free f a)  ->  Free f a
 \end{code}
 
 \hypertarget{free-the-trees}{%
@@ -462,7 +465,22 @@ trees:
 \end{itemize}
 
 This gives us a ``definitely not loopy'' structure -- they are all
-tree-ish -- but not the one we're after.
+tree-ish -- and we can control the branching by our choice of @f@.
+
+\begin{code}
+data ListF r where
+  Cons :: Maybe r -> List a r
+
+data TreeF r where
+  Branch :: r -> a -> r  ->  Tree r
+
+data RoseF a r where
+  Node :: a -> [r] -> RoseF r
+
+data TwoThree a r where
+  Two    :: r -> a -> r            ->  TwoThree r
+  Three  :: r -> a -> r -> a -> r  ->  TwoThree r
+\end{code}
 
 \hypertarget{free-variables}{%
 \section{Free variables}\label{free-variables}}
@@ -496,39 +514,44 @@ data Term where
   Abs  ::  (Term -> Term)  ->  Term
 \end{code}
 
-But notice that the host-langueg functions we use here are too powerful - they
-can scrutinise the parameter and "evaluate" the embedded language differently
-depending on the argument form.
+But notice that the host-language functions we use here are too powerful - they
+can scrutinise the parameter and return a different @Term@ depending on the argument
+passed in.
 
 We wanted to use the host language binders to avoid having to write all the variable
 book keeping ourselves and accidentally the whole Haskell into the embedded language!
+This is a pretty big escape hatch!
 
 \section{Parametric higher-order abstract syntax}
 
-As we're all very familiar with by now - the main way to stop code from inspecting,
-forging or otherwise interfering with parameters you pass them is to make them
-polymorphic. Hence: parametric higher-order abstract syntax.
+As we're all very familiar with by now - one way to stop code from inspecting,
+constructing or otherwise interfering with parameters you pass them is to make them
+polymorphic. Hence: parametric higher-order abstract syntax. We add a constructor
+and add a type parameter for (each, distinct sort of) variables.
 
 %{
 %format . = "."
 
 \begin{code}
-data PTerm a where
-  Var  ::  a                   ->  PTerm a
-  App  ::  PTerm a -> PTerm a  ->  PTerm a
-  Abs  ::  (a -> PTerm a)      ->  PTerm a
+data PTerm v where
+  Var  ::  v                   ->  PTerm v
+  App  ::  PTerm v -> PTerm v  ->  PTerm v
+  Abs  ::  (v -> PTerm v)      ->  PTerm v
 
-newtype Term = Wrap { unwrap :: forall a. PTerm a }
+newtype Term = Wrap { unwrap :: forall v. PTerm v }
 
 id = Wrap (Abs $ \x -> Var x)
 \end{code}
-
 %}
 
-We're back to explicitly representing variables in our AST, but names can never accidentally conflict
+We get to reuse the host language binders without allowing all the host language
+capabilities.
 
 \hypertarget{adding-recursion-for-free}{%
 \section{Adding recursion for Free}\label{adding-recursion-for-free}}
+
+Now that we know about PHOAS, we can add an explicit recursion operator to @Free f a@
+and it is starting to look pretty useful!
 
 %{
 %format . = "."
@@ -536,30 +559,29 @@ We're back to explicitly representing variables in our AST, but names can never 
 \begin{code}
 return  :: Monad m =>  a              -> m a
 join    :: Monad m =>  m (m a)        -> m a
-mfix    :: Monad m =>  (a -> m  a)    -> m a
+mfix    :: Monad m =>  (a -> m a)     -> m a
 
 data Free f a where
   Pure  ::  a                         ->  Free f a
-  Fix   :: (a    ->  f (Free f a))    ->  Free f a
   Free  ::           f (Free f a)     ->  Free f a
-  PFix  :: ([a]  ->  [f (Free f a)])  ->  Free f a
+  Fix   :: (a    ->  f (Free f a))    ->  Free f a
 
 newtype Graph f = Wrap { unwrap :: forall a. Free f a }
 \end{code}
 %}
 
-@Pure@ is a variable referencing some other part of the graph. The only way you can get an @a@ is
-to be passed one inside the @Fix@ function - and the only thing you {\it can} do with an @a@ is give
-it to @Pure@.
+@Free@ takes an @f@ of sub-structures and wraps them up as a @Graph@. This is where our choice of
+@f@ allows us to carry data, to control the recursive structure, etc.
 
-@Free@ takes an @f@-functor of sub-structures and wraps them up as a graph. This is where our choice
-of functor allows us to carry any data, to control the recursive structure of the graph, etc.
+@Pure@ is a variable referencing some other part of the graph. The only way you can get an @a@ is
+to be passed one inside the @Fix@ function - and the only thing you can {\it do} with an @a@ is give
+it to @Pure@.
 
 And, finally, @Fix@ allows us to introduce recursion by supplying a function which takes a polymorphic
 variable token/witness/name and return a structure which might or might not actually use it. But if it
 *does* use the variable token/witness/name thingo the only thing it can do is pass it to @Pure@.
 
-Thanks polymorphism!
+We can wrap the thing up with a newtype to force the ``variable'' type parameter to stay polymorphic.
 
 \section{Streams}
 
@@ -666,5 +688,16 @@ fixVal :: Eq a => a -> (a -> a) -> a
 fixVal v f = if v == v' then v else fixVal v' f
   where v' = f v
 \end{code}
+
+\section{Conclusion}
+
+There's a lot more detail about this approach to graphs (including the ``add recursion to
+each structure'' step that I skipped over) in \cite{Chlipala:2008:PHA:1411204.1411226}.
+
+For more details on parametic higher-order abstract syntax, see \cite{Chlipala:2008:PHA:1411204.1411226}
+
+\section*{Bibliography}
+
+\printbibliography
 
 \end{document}

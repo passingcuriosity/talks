@@ -10,3 +10,5 @@
 *.vrb
 *.synctex*
 *.ptb
+*.bbl
+*.blg
