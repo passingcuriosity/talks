@@ -9,6 +9,7 @@ import Data.Typeable (Typeable)
 import Data.Function (fix)
 \end{code}
 %endif
+\usepackage{comment}
 
 \usepackage{mathtools}
 \usepackage{lmodern}
@@ -170,7 +171,7 @@ definitions work the same way).
 \item
   @letrec@ in Scheme, Racket, etc.
 \item
-  @let\ rec@ in Ocaml, @val\ rec@ in SML.
+  @let rec@ in Ocaml, @val rec@ in SML.
 \item
   @fix@ in various languages.
 \item
@@ -190,7 +191,7 @@ ones  = Cons 1 ones
 
 \begin{tikzpicture}[list/.style={rectangle split, rectangle split parts=2,
     draw, rectangle split horizontal}, >=stealth, start chain]
-  \node[list, on chain] (A) {47};
+  \node[list, on chain] (A) {1};
   \path (A) edge[dotloop above] node {} (A);
 \end{tikzpicture}
 
@@ -208,7 +209,7 @@ tree  = Branch tree 47 tree
 
 \begin{tikzpicture}[%
 list/.style={rectangle split, rectangle split parts=3, draw, rectangle split horizontal},>=stealth, start chain]
-  \node[list, on chain] (A) { \phantom{1} \nodepart{second} 12 \nodepart{third} \phantom{1} };
+  \node[list, on chain] (A) { \phantom{1} \nodepart{second} 47 \nodepart{third} \phantom{1} };
 
   \path (A) edge[dotloop left] node {} (A);
   \path (A) edge[dotloop right] node {} (A);
@@ -233,10 +234,12 @@ How do you have two-way links without mutable references? Fixed points!
 data SomeTree where
   ATree :: Maybe SomeTree -> Maybe SomeTree -> Maybe SomeTree -> SomeTree
 
-tree = ATree Nothing (Just left) (Just right)
-  where
-    left = ATree (Just tree) Nothing Nothing
-    right = ATree (Just tree) Nothing Nothing
+tree :: SomeTree
+tree =
+  let  parent  = ATree Nothing (Just left) (Just right)
+       left    = ATree (Just parent) Nothing Nothing
+       right   = ATree (Just parent) Nothing Nothing
+  in parent
 \end{code}
 
 
@@ -247,8 +250,8 @@ tree = ATree Nothing (Just left) (Just right)
 \subsection{What does this do?}\label{what-does-this-do}}
 
 \begin{spec}
-foo = ... :: [Int]
-boo = map f foo
+foo = ... :: [String]
+bar = map f foo
 \end{spec}
 
 When we ``fully evaluate'' @bar@:
@@ -271,19 +274,14 @@ When we ``fully evaluate'' @bar@:
 
 Even when we know that @foo@ is in normal form, that @map@
 is just @map@, and that @f@ is just the identity function,
-we don't know whether @map\ id\ foo@ will terminate, whether the
+we don't know whether @map id foo@ will terminate, whether the
 result (in normal form) will fit in memory, etc.
 
 Similar problems occur with @fold@s and various other recursive
 functions.
 
 \hypertarget{then-answer}{%
-\subsection{Then answer}\label{then-answer}}
-
-If we think about it a little bit, the answer to most of the questions
-we asked is not related to the ``size'' of @foo@ -- to the number
-of @Int@s in memory -- but the number of \emph{paths} from
-@foo@, following pointers, to @Int@s.
+\subsection{Some answers}\label{some-answers}}
 
 \begin{enumerate}
 \item
@@ -301,56 +299,62 @@ of @Int@s in memory -- but the number of \emph{paths} from
   fits in finite memory, so of course it will terminate''.
 \end{enumerate}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+If we think about it a little bit, the answer to most of these
+questions is not related to the ``size'' of @foo@ -- to the number
+of @Int@s in memory -- but the number of \emph{paths} from
+@foo@, following pointers, to @Int@s.
 
 \begin{enumerate}
 
 \item
-  The answer is ``once per path following pointers from @foo@ to
+  The answer is ``once for reach path following pointers from @foo@ to
   a @String@ value''.
 \item
   The answer is ``in proportion to the number of paths from @foo@
   to a @String@ value''.
 \item
   The answer is ``the same as @foo@ but with all recursion
-  unfolded''.
+  completely unfolded''.
 \item
   The answer is ``@bar@ will definitely terminate when
   @foo@ is finite and has no value recursion''.
 \end{enumerate}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+We can make use of Haskell's features (and the features of any language with
+similar value recursion features) to get graph-like data structures, but only
+if we don't intend to do any of the standard functional programming things to
+them.
 
-What?
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{itemize}
-\item
-  Haskell is a non-strict language.
-\item
-  This means every definition is, potentially, self referential.
-\item
-  This means every recursive \emph{type} allows for recursive
-  \emph{value}s.
-\item
-  But we can't, in general, \emph{observe} this value-level recursion so
-  we can't keep from breaking these structures when we map.
-\end{itemize}
+This seems slightly less than ideal.
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-
-
-We have exactly one cons cell and exactly one @Int@. But we have
+We started with exactly one cons cell and exactly one @Int@. But we have
 value recursion.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\begin{tikzpicture}[list/.style={rectangle split, rectangle split parts=2,
+    draw, rectangle split horizontal}, >=stealth, start chain]
+  \node[list, on chain] (A) {1};
+  \path (A) edge[dotloop above] node {} (A);
+\end{tikzpicture}
 
+Now we have one cons cell and one @Int@ for each time @map succ@ follows the
+@cdr@ pointer. @map@ will follow the @cdr@ pointer an unbounded number of times
+so we have an unbounded amount of time and memory demand.
 
-Now we have one cons cell and one @Int@ for each time
-@map@ follows the @snd@ pointer. And @map@ will
-follow the @snd@ pointer an unbounded number of times.
+\begin{tikzpicture}[list/.style={rectangle split, rectangle split parts=2,
+    draw, rectangle split horizontal},
+    wot/.style={*->},
+    >=stealth, start chain]
+  \node[list, on chain] (A) {2};
+  \node[list, on chain] (B) {2};
+  \node[list, on chain] (C) {2};
+  \node[on chain] (D) {...};
+
+  \path (A) edge[wot] node {} (B);
+  \path (B) edge[wot] node {} (C);
+  \path (C) edge[wot] node {} (D);
+\end{tikzpicture}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
@@ -361,13 +365,13 @@ able to completely process them in finite time!
 
 Let's stop ``fully evaluating'' then.
 
-Maybe we're going to @zipWith\ (+)\ selectedSequence\ inputData@
+Maybe we're going to @zipWith (+) selectedSequence inputData@
 and one sequence the users can select is @ones@.
 
 No matter how many values are demanded from @ones@, at the end
 it'll have allocated exactly one cons cell and exactly one @Int@.
 
-If we do the same with @twos\ =\ map\ succ\ ones@ it'll allocate
+If we do the same with @twos = map succ ones@ it'll allocate
 a new cons cell and a new @Int@ value every time @zipWith@
 demands the next value.
 
@@ -601,19 +605,28 @@ We can wrap the thing up with a newtype to force the ``variable'' type parameter
 
 \section{Streams}
 
-\begin{spec}
+\begin{code}
 data StreamF a r where
-  Cons :: a -> r -> StreamF a r
-  deriving (Functor,Foldable,Traversable)
+  Step :: a -> r -> StreamF a r
+  deriving (Functor, Foldable, Traversable)
+
+instance Bifunctor StreamF where
+  bimap f g (Step a r) = Step (f a) (g r)
 
 type Stream a = Graph (StreamF a)
 
+-- 111...
 ones :: Stream Int
-ones = Wrap $ Fix (\loop -> Cons 1 (Pure loop))
+ones = Hide $ Fix (\loop -> Step 1 (Pure loop))
 
+-- 1222...
 one'twos :: Stream Int
-one'twos = Wrap $ Cons 1 (Fix (\loop -> Cons 2 (Pure loop)))
-\end{spec}
+one'twos = Hide $ Free (Step 1 (Fix (\loop -> Step 2 (Pure loop))))
+
+-- 121212...
+onetwo's :: Stream Int
+onetwo's = Hide $ Fix (\loop -> Step 1 (Free (Step 2 (Pure loop))))
+\end{code}
 
 \section{Binary trees}
 
@@ -698,7 +711,10 @@ map the values, the structure will stay the same.
 \section{@fold@}
 
 We can similarly implement a framework of @fold@ functions to handle just the sort
-of folding we want:
+of folding we want.
+
+In the generic case we provide functions to handle the references, recursion,
+and branching cases (i.e. the three constructors of @Free@):
 
 \begin{code}
 gfold :: Functor f => (t -> c) -> ((t -> c) -> c) -> (f c -> c) -> Graph f  ->  c
@@ -707,13 +723,43 @@ gfold v l f = trans . reveal
     trans (Pure x) = v x
     trans (Free fa) = f (fmap trans fa)
     trans (Fix g) = l (f . fmap trans . g)
+\end{code}
 
+We can use @fold@ to reduce a structure without following the recursive
+references. This allows us to compute with the finite parts of a structure
+with value recursion.
+
+\begin{code}
 fold :: Functor f  => (f c -> c) -> c -> Graph f  -> c
 fold alg k = gfold id (\g -> g k) alg
+\end{code}
 
+\begin{spec}
+streamF2list :: StreamF a [a] -> [a]
+streamF2list (Step x xs) = x : xs
+
+> fold streamf2list [] onetwo's 
+[1,2]
+\end{spec}
+
+When we want to unroll recusion while reducing structures we can use a cyclic
+fold. This time we don't need to supply a "zero" element to replace the references,
+we'll just follow them!
+
+\begin{code}
 cfold :: Functor f  => (f t -> t) -> Graph f  -> t
 cfold = gfold id fix
+\end{code}
 
+\begin{spec}
+> cfold streamf2list onetwo's
+[1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,....
+\end{spec}
+
+You can also implement additional special folds. Here's one that can be used
+(with appropriate functions)
+
+\begin{code}
 sfold :: (Eq t, Functor f) => (f t -> t) -> t -> Graph f -> t
 sfold alg k = gfold id (fixVal k) alg
 
