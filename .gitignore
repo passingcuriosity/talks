@@ -12,3 +12,6 @@
 *.ptb
 *.bbl
 *.blg
+*.bcf
+*.run.xml
+

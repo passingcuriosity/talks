@@ -1,6 +1,15 @@
 \documentclass[]{article}
 %include polycode.fmt
 
+%if False
+\begin{code}
+{-# OPTIONS -XScopedTypeVariables -XGADTs -XRankNTypes -XDeriveFunctor -XDeriveTraversable -XDeriveFoldable  -XTypeOperators -fwarn-incomplete-patterns  -XNoMonomorphismRestriction -XFlexibleInstances #-}
+
+import Data.Typeable (Typeable)
+import Data.Function (fix)
+\end{code}
+%endif
+
 \usepackage{mathtools}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -126,10 +135,10 @@ syntax too):
 
 \begin{code}
 data Operation a where
-  Dab     ::                      Operation a
-  Krump   ::             Int  ->  Operation a
-  Shuffle ::             [a]  ->  Operation a
-  Robot   :: Repr a =>   a    ->  Operation a
+  Dab     ::                          Operation a
+  Krump   ::                 Int  ->  Operation a
+  Shuffle ::                 [a]  ->  Operation a
+  Robot   :: Typeable a =>   a    ->  Operation a
 \end{code}
 
 \hypertarget{recursive-types-give-trees}{%
@@ -139,11 +148,11 @@ trees}{Recursive types give trees}}\label{recursive-types-give-trees}}
 We're also familiar with recursive types to define structures which can
 contain other instances of themselves: lists, trees, etc.
 
-\begin{code}
+\begin{spec}
 data List a where
   Nil   ::                  List a
   Cons  :: a -> List a ->   List a
-\end{code}
+\end{spec}
 
 These define trees. ``\emph{Inside}'' a @Cons@ value is an
 @a@ and another (``smaller'') @List a@ value.
@@ -171,10 +180,13 @@ definitions work the same way).
 \hypertarget{infinite-lists}{%
 \subsection{``Infinite'' lists}\label{infinite-lists}}
 
-\begin{code}
+\begin{spec}
+one   :: List Int
+one   = Cons 1 Nil
+
 ones  :: List Int
 ones  = Cons 1 ones
-\end{code}
+\end{spec}
 
 \begin{tikzpicture}[list/.style={rectangle split, rectangle split parts=2,
     draw, rectangle split horizontal}, >=stealth, start chain]
@@ -185,14 +197,14 @@ ones  = Cons 1 ones
 \hypertarget{infinite-binary-trees}{%
 \subsection{``Infinite'' binary trees}\label{infinite-binary-trees}}
 
-\begin{code}
+\begin{spec}
 data Tree a where
   Leaf    :: Tree a
   Branch  :: Tree a -> a -> Tree a -> Tree a
 
 tree  :: Tree
 tree  = Branch tree 47 tree
-\end{code}
+\end{spec}
 
 \begin{tikzpicture}[%
 list/.style={rectangle split, rectangle split parts=3, draw, rectangle split horizontal},>=stealth, start chain]
@@ -218,13 +230,13 @@ fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
 How do you have two-way links without mutable references? Fixed points!
 
 \begin{code}
-data Tree where
-  Tree :: Maybe Tree -> Maybe Tree -> Maybe Tree
+data SomeTree where
+  ATree :: Maybe SomeTree -> Maybe SomeTree -> Maybe SomeTree -> SomeTree
 
-tree = Tree Nothing (Just left) (Just right)
+tree = ATree Nothing (Just left) (Just right)
   where
-    left = Tree (Just parent) Nothing Nothing
-    right = Tree (Just parent) Nothing Nothing
+    left = ATree (Just tree) Nothing Nothing
+    right = ATree (Just tree) Nothing Nothing
 \end{code}
 
 
@@ -234,10 +246,10 @@ tree = Tree Nothing (Just left) (Just right)
 \hypertarget{what-does-this-do}{%
 \subsection{What does this do?}\label{what-does-this-do}}
 
-\begin{code}
-let foo = ... :: [Int]
-in map f foo
-\end{code}
+\begin{spec}
+foo = ... :: [Int]
+boo = map f foo
+\end{spec}
 
 When we ``fully evaluate'' @bar@:
 
@@ -445,11 +457,11 @@ specialise it to represent streams, trees, graphs, etc.
 Here is the @Free@ data type from Haskell's standard library.
 
 
-\begin{code}
+\begin{spec}
 data Free f a where
   Pure  :: a             ->  Free f a
   Free  :: f (Free f a)  ->  Free f a
-\end{code}
+\end{spec}
 
 \hypertarget{free-the-trees}{%
 \section{Free the trees}\label{free-the-trees}}
@@ -471,18 +483,18 @@ This gives us a ``definitely not loopy'' structure -- they are all
 tree-ish -- and we can control the branching by our choice of @f@.
 
 \begin{code}
-data ListF r where
-  Cons :: Maybe r -> List a r
+data ListF a r where
+  Cons :: a -> Maybe r -> ListF a r
 
-data TreeF r where
-  Branch :: r -> a -> r  ->  Tree r
+data BinaryTreeF a r where
+  Branch :: r -> a -> r  ->  BinaryTreeF a r
 
-data RoseF a r where
-  Node :: a -> [r] -> RoseF r
+data RoseTreeF a r where
+  Node :: a -> [r] -> RoseTreeF a r
 
-data TwoThree a r where
-  Two    :: r -> a -> r            ->  TwoThree r
-  Three  :: r -> a -> r -> a -> r  ->  TwoThree r
+data TwoThreeTreeF a r where
+  Two    :: r -> a -> r            ->  TwoThreeTreeF a r
+  Three  :: r -> a -> r -> a -> r  ->  TwoThreeTreeF a r
 \end{code}
 
 \hypertarget{free-variables}{%
@@ -511,11 +523,11 @@ say it's impossible to ``forge'' these recursive references.
   binding forms in an abstract syntax tree with binding forms in the host
   language (e.g. we use functions in our ASTs to represent function bodies)
 
-\begin{code}
+\begin{spec}
 data Term where
   App  ::  Term -> Term    ->  Term
   Abs  ::  (Term -> Term)  ->  Term
-\end{code}
+\end{spec}
 
 But notice that the host-language functions we use here are too powerful - they
 can scrutinise the parameter and return a different @Term@ depending on the argument
@@ -543,7 +555,7 @@ data PTerm v where
 
 newtype Term = Wrap { unwrap :: forall v. PTerm v }
 
-id = Wrap (Abs $ \x -> Var x)
+idFunction = Wrap (Abs $ \x -> Var x)
 \end{code}
 %}
 
@@ -556,20 +568,21 @@ capabilities.
 Now that we know about PHOAS, we can add an explicit recursion operator to @Free f a@
 and it is starting to look pretty useful!
 
-%{
-%format . = "."
-
-\begin{code}
+\begin{spec}
 return  :: Monad m =>  a              -> m a
 join    :: Monad m =>  m (m a)        -> m a
 mfix    :: Monad m =>  (a -> m a)     -> m a
+\end{spec}
 
+%{
+%format . = "."
+\begin{code}
 data Free f a where
   Pure  ::  a                         ->  Free f a
   Free  ::           f (Free f a)     ->  Free f a
   Fix   :: (a    ->  f (Free f a))    ->  Free f a
 
-newtype Graph f = Wrap { unwrap :: forall a. Free f a }
+newtype Graph f = Hide { reveal :: forall a. Free f a }
 \end{code}
 %}
 
@@ -588,7 +601,7 @@ We can wrap the thing up with a newtype to force the ``variable'' type parameter
 
 \section{Streams}
 
-\begin{code}
+\begin{spec}
 data StreamF a r where
   Cons :: a -> r -> StreamF a r
   deriving (Functor,Foldable,Traversable)
@@ -600,7 +613,7 @@ ones = Wrap $ Fix (\loop -> Cons 1 (Pure loop))
 
 one'twos :: Stream Int
 one'twos = Wrap $ Cons 1 (Fix (\loop -> Cons 2 (Pure loop)))
-\end{code}
+\end{spec}
 
 \section{Binary trees}
 
@@ -612,58 +625,75 @@ data TreeF a r where
 
 type Tree a = Graph (TreeF a)
 
-tree :: Tree Int
-tree = Fix $ \loop -> Fork 12 (Pure loop) (Pure loop)
+fixedTree :: Tree Int
+fixedTree = Hide (Fix $ \loop -> Fork 12 (Pure loop) (Pure loop))
 \end{code}
 
 \section{@map@}
 
-We can implement @map@ in so that we don't throw away our structure. First remember
-that we want to write a function like this:
+We can implement @map@ in so that we don't throw away our structure. First
+remember that the values we want to modify are "inside" the values of our @f@
+functor type we used with @Free f a@. If we want to replace the @String@s in a
+tree with their lengths we'll need something a bit like this:
 
-\begin{code}
-gmap :: (a -> b) -> Graph (f a) -> Graph (f b)
-\end{code}
+\begin{spec}
+gmap :: (String -> Int) -> Graph (TreeF String) -> Graph (TreeF Int)
+\end{spec}
 
-And recall that @f a@ and @f b@ are have kind @* -> *@ (because they are functors).
-Maybe we can use a natural transformation!
+Recall that @f a@ and @f b@ are functors and have kind @* -> *@. So what we
+seem to be doing here is lifting a function @String -> Int@ to a natural
+transformation and then applying it to the functor "inside" the Free.
 
 %{
 %format . = "."
 \begin{code}
-type f ~> g = forall a. f a -> f g
+type f ~> g = forall a. f a -> g a
 \end{code}
 %}
 
+Once we have a natural transformation, here is how we can apply it to transform
+a free the source functor into the equivalent structure over the second:
+
 \begin{code}
 transform  :: (Functor f, Functor g)
-           => (f ~> g) -> Graph f -> Graph g
-transform f x = Wrap (hmap (unwrap x))
-  where
-    hmap (Pure x)  = Pure x
-    hmap (Free x)  = Free (f (fmap hmap x))
-    hmap (Fix g)   = Fix ( (f . fmap hmap) . g)
+           => (f ~> g)
+           -> Graph f
+           -> Graph g
+transform f x = Hide (hmap f (reveal x)) where
+    hmap :: forall a f g. (Functor f, Functor g) => (f ~> g) -> Free f a -> Free g a
+    hmap f (Pure  x)  = Pure x
+    hmap f (Fix   g)  = Fix ((f . fmap (hmap f)) . g)
+    hmap f (Free  x)  = Free (f (fmap (hmap f) x))
 \end{code}
 
-Because we want to map over graphs build with ``structural'' ADTs with two
-type parameters and it's the {\it first} one -- the one that describes the values
-we want to modify -- we'll need to use @Bifunctor@.
+(Most of the type signature noise there is because I turned @-XGATDs@ on to get
+the better ADT syntax. Sorry.)
+
+We can use the function-to-be-mapped to construct a natural transformation by
+realising that all of the compatible functors must be bifunctors (i.e. they
+have {\it two} type parameters, both covariant). If it only had one there would
+be data in the data structure for us to map over!
 
 \begin{code}
 class Bifunctor p where
   bimap :: (a -> c) -> (b -> d) -> p a b -> p c d
+\end{code}
 
+The natural transformation we want applies the function in the first argument
+and leaves the second argument alone (that's the recursive argument used by
+@Free@). This is exactly @bimap f id@:
+
+\begin{code}
 gmap  :: (Bifunctor f, Functor (f a), Functor (f b))
-      => (a -> b) -> Graph (f a) -> Graph (f b)
+      => (a -> b)
+      -> Graph (f a) -> Graph (f b)
 gmap f = transform (bimap f id)
 \end{code}
 
 Now we can @gmap@ safe in the knowledge that the only thing we'll modify while we
 map the values, the structure will stay the same.
 
-\begin{code}
-map succ one'twos
-\end{code}
+|map succ one'twos|
 
 \section{@fold@}
 
@@ -672,7 +702,7 @@ of folding we want:
 
 \begin{code}
 gfold :: Functor f => (t -> c) -> ((t -> c) -> c) -> (f c -> c) -> Graph f  ->  c
-gfold v l f = trans . unwrap
+gfold v l f = trans . reveal
   where
     trans (Pure x) = v x
     trans (Free fa) = f (fmap trans fa)
