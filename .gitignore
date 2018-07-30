@@ -1,0 +1,18 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
+*.vrb
+*.synctex*
+*.ptb
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+# TeX is generated from Literate Haskell files.
+*.tex
