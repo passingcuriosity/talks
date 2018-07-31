@@ -1,8 +1,11 @@
-# Free things
+Free things
+===========
 
-This is a [Simple Machines][1] tech talk about free objects.
+This is a [Simple Machines][1] tech talk about free structures beyond the
+"free monads" and "free applicatives" we see in functional programming.
 
-# Outline
+Outline
+-------
 
 1. Algebraic structures
    1. Sets

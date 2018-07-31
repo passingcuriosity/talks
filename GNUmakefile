@@ -1,17 +1,15 @@
-%.pdf: %.md GNUmakefile
-	pandoc -s -f markdown+smart -t beamer -o $@ $<
+SOURCES:=$(wildcard *.lhs)
+TARGETS:=$(SOURCES:.lhs=.pdf)
+DEPS:=$(wildcard *.bib *.dot *.eps *.png)
 
 %.tex: %.lhs GNUmakefile
 	lhs2TeX -o $@ $<
 
-%.pdf: %.tex GNUmakefile
+%.pdf: %.tex GNUmakefile $(DEPS)
 	pdflatex $<
 	biber $(<:.tex=)
 	pdflatex $<
 	pdflatex $<
-
-SOURCES:=$(wildcard *.lhs)
-TARGETS:=$(SOURCES:.lhs=.pdf)
 
 all: $(TARGETS)
 

@@ -1,10 +1,10 @@
 \documentclass[a4paper]{article}
 %include polycode.fmt
 
-\usepackage[backend=biber,style=alphabetic,citestyle=authoryear]{biblatex}
+\usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
 
-\title{Free things}
+\title{Free structures}
 \author{Thomas Sutton}
 
 \begin{document}
@@ -14,8 +14,8 @@
 We've heard quite a bit about functional programming with ``free monads'' and
 ``free applicatives'' (most recently from Cam and Afsal) and various extensions
 (e.g. my talk on free monads with explicit fixed points). In this talk I'll try
-to explain what ``free'' means and talk about some other useful (or interesting)
-free constructions.
+to explain what ``free'' means and talk about some other useful (or, at least,
+interesting) free constructions.
 \end{abstract}
 
 \tableofcontents
@@ -23,7 +23,7 @@ free constructions.
 \section{Introduction}
 
 As a group it's fairly safe to say we're mostly used to ``free'' as part of the
-compound word ``free-monad''.
+compound word ``free-monad'' but it's quite a bit more general than that.
 
 \section{Algebraic structures}
 
