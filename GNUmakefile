@@ -1,23 +1,18 @@
-ALL := $(wildcard *.md)
+SOURCES:=$(wildcard *.lhs)
+TARGETS:=$(SOURCES:.lhs=.pdf)
+DEPS:=$(wildcard *.bib)
 
-
-%.pdf: %.md GNUmakefile
-	pandoc -s -f markdown+smart -t beamer -o $@ $<
 
 %.tex: %.lhs GNUmakefile
 	lhs2TeX -o $@ $<
 
-%.pdf: %.tex GNUmakefile
+%.pdf: %.tex GNUmakefile $(DEPS)
 	pdflatex $<
 	biber $(<:.tex=)
 	pdflatex $<
 	pdflatex $<
 
-all: presentation2.pdf recursion.pdf
-
-presentation2.pdf: presentation2.tex presentation.bib GNUmakefile
-
-recursion.pdf: recursion.tex $(wildcard *.hs)
+all: $(TARGETS)
 
 clean:
-	rm -f *.pdf
+	find . -type f -print | xargs git check-ignore | xargs rm
