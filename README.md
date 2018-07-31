@@ -30,4 +30,10 @@ Outline
 5. Conclusion
 6. Questions
 
+Tools
+-----
+
+[`tikz-cd`][2] to draw diagrams
+
 [1]: http://simplemachines.com.au/
+[2]: http://www.jmilne.org/not/Mtikz.pdf
