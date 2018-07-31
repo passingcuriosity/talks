@@ -10,9 +10,10 @@
 	pdflatex $<
 	pdflatex $<
 
-all: presentation.pdf
+SOURCES:=$(wildcard *.lhs)
+TARGETS:=$(SOURCES:.lhs=.pdf)
 
-presentation.pdf: presentation.tex presentation.bib GNUmakefile
+all: $(TARGETS)
 
 clean:
-	find . \( -name .git -prune \) -o \( -type f -print \) | xargs git check-ignore | xargs rm
+	find . -type f -print | xargs git check-ignore | xargs rm

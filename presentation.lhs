@@ -11,10 +11,43 @@
 \maketitle
 
 \begin{abstract}
-We're more or less familiar with sprinkling the word "free" all over our purely
-functional programs with "free monads" and "free applicatives". What does "free"
-mean and what other things can we get for free?
+We've heard quite a bit about functional programming with ``free monads'' and
+``free applicatives'' (most recently from Cam and Afsal) and various extensions
+(e.g. my talk on free monads with explicit fixed points). In this talk I'll try
+to explain what ``free'' means and talk about some other useful (or interesting)
+free constructions.
 \end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+As a group it's fairly safe to say we're mostly used to ``free'' as part of the
+compound word ``free-monad''.
+
+\section{Algebraic structures}
+
+\section{Examples}
+\subsection{Semigroups}
+\subsection{Monoids}
+\subsection{Groups}
+
+\section{"Free"}
+
+\subsection{Algebraic view}
+
+\subsection{Categorical view}
+
+\section{Programming}
+
+\subsection{Free semigoups}
+\subsection{Free monoids}
+\subsection{Free groups}
+\subsection{Free algebras}
+
+\section{Conclusions}
+
+\section*{Questions}
 
 \section*{Bibliography}
 
