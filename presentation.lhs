@@ -2,6 +2,7 @@
 %include polycode.fmt
 
 \usepackage{tikz-cd}
+\usepackage{graphicx}
 
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
@@ -20,9 +21,23 @@ to explain what ``free'' means and talk about some other useful (or, at least,
 interesting) free constructions.
 \end{abstract}
 
+\section*{Introduction}
+
+\begin{description}
+\item[Question] How do you tell when someone is a good functional programmer?
+\item[Answer] They can finish a program without getting covered in chalk dust.
+\end{description}
+
+\begin{center}
+  \includegraphics{functional-programming}
+\end{center}
+
+\clearpage
+
 \tableofcontents
 
 \section{Introduction}
+
 
 As a group it's fairly safe to say we're mostly used to ``free'' as part of
 the compound word ``free-monad'' (and, if Cam has spoken recently,
