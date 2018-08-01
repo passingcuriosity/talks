@@ -108,7 +108,9 @@ $\forall x \in S.\: x \cdot x^{-1} \equiv \epsilon \equiv x^{-1} \cdot x$
 
 $\forall x, y \in S.\: x \cdot y \equiv y \cdot x$
 
-\section{Forgetful things}
+\section{Free and forgetful functors}
+
+\section{``Forgetful'' things}
 
 Here describe the informal concept of forgetful functors using the stuff,
 structure, properties.
@@ -152,15 +154,22 @@ V \arrow{ll}{U}
 \end{tikzcd}
 \end{center}
 
-\subsection{Algebraic view}
-
 \subsection{Categorical view}
 
-\section{Programming}
-
 \subsection{Free semigoups}
+
+For a given set $A$, we can call the free semigroup $A^{+}$.
+
+This should be familiar from the $+$ iteration operator from regular languages.
+
 \subsection{Free monoids}
+
+We might like to call the free monoid on the set $A$, $A^{*}$.
+
+This should be familiar from the $*$ iteration operator from regular languages.
+
 \subsection{Free groups}
+
 \subsection{Free algebras}
 
 \section{Conclusions}
