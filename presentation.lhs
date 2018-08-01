@@ -3,6 +3,8 @@
 
 \usepackage{tikz-cd}
 \usepackage{graphicx}
+\usepackage{bbold}
+
 
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
@@ -59,8 +61,52 @@ thing''? Let's see!
 
 \section{Examples}
 \subsection{Semigroups}
+
+A semigroup is a set with a binary operation on that set and some laws
+requiring that the operation is associative.
+
+$(S, \cdot : S \times S \rightarrow S)$
+
+$\forall x,y,z \in S.\: (x\cdot y)\cdot z \equiv x\cdot (y\cdot z)$
+
 \subsection{Monoids}
+
+A monoid is a semigroup with an extra distinguished element and an additional
+law asserting that this element is a zero for the operator.
+
+$(S, \epsilon, \cdot : S \times S \rightarrow S)$
+
+$\forall x,y,z \in S.\: (x\cdot y)\cdot z \equiv x\cdot (y\cdot z)$
+
+$\forall x \in S.\: x \cdot \epsilon \equiv x \equiv \epsilon \cdot x$
+
 \subsection{Groups}
+
+A group is a monoid with an inverse for every element. We generally
+encode that as an ``inverse'' operation.
+
+$(S, \epsilon, \:^{-1} : S \rightarrow S, \cdot : S \times S \rightarrow S)$
+
+$\forall x,y,z \in S.\: (x\cdot y)\cdot z \equiv x\cdot (y\cdot z)$
+
+$\forall x \in S.\: x \cdot \epsilon \equiv x \equiv \epsilon \cdot x$
+
+$\forall x \in S.\: x \cdot x^{-1} == \epsilon == x^{-1} \cdot x$
+
+\subsection{Abelian groups}
+
+An Abelian group is a group with an additional law asserting that the
+operator is commutative:
+
+$(S, \epsilon, \:^{-1} : S \rightarrow S, \cdot : S \times S \rightarrow S)$
+
+$\forall x,y,z \in S.\: (x\cdot y)\cdot z \equiv x\cdot (y\cdot z)$
+
+$\forall x \in S.\: x \cdot \epsilon \equiv x \equiv \epsilon \cdot x$
+
+$\forall x \in S.\: x \cdot x^{-1} \equiv \epsilon \equiv x^{-1} \cdot x$
+
+$\forall x, y \in S.\: x \cdot y \equiv y \cdot x$
 
 \section{Forgetful things}
 
@@ -69,36 +115,42 @@ structure, properties.
 
 \section{``Free'' things}
 
-\[
-  \begin{tikzcd}
-    A \arrow{r}{f} \arrow[swap]{dr}{g\circ f} & B \arrow{d}{g} \\
-     & C
-  \end{tikzcd}
-\]
+Given a set, we can construct a vector space by taking (for some ground
+field $\mathbb k$) finite formal sums of its elements.
+We can likewise convert any function $f : S \rightarrow T$ between sets
+into a linear function between vector spaces.
 
+${\mathbb k}[-] : {\bf Set} \rightarrow {\bf Vect}_{\mathbb k}$
+
+We can also define a forgetful functor which takes a vector space to a
+basis set.
+
+$U : {\bf Vect}_{\mathbb k} \rightarrow {\bf Set}$
+
+When given a vector space we can recover a set by finding a basis for it (see
+your favourite linear algebra text book).
+
+We can see how these fit together with morphisms in ${\bf Set}$ and 
+${\bf Vect}_{\mathbb k}$ in the following commuting diagram:
+
+\begin{center}
 \begin{tikzcd}
+S
+  \arrow{rr}{{\mathbb k}[-]}
+  \arrow{dd}{f}
 &
-  A
-    \arrow{ldd}[swap]{f}
-    \arrow{rd}[description]{c}
-    \arrow{rrd}[description]{d}
-    \arrow{rrrd}[description]{e}
+&
+{\mathbb k}[S]
+\arrow{dd}{g}
 \\
-&
-  B
-    \arrow{ld}
-    \arrow{r}
-&
-  C
-    \arrow{r}
-&
-  D
-    \arrow{r}
-&
-  E
 \\
-  F
+U(V)
+&
+&
+V \arrow{ll}{U}
+\\
 \end{tikzcd}
+\end{center}
 
 \subsection{Algebraic view}
 
@@ -114,6 +166,8 @@ structure, properties.
 \section{Conclusions}
 
 \section*{Questions}
+
+\appendix{Diagrams}
 
 \section*{Bibliography}
 
