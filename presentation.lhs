@@ -4,7 +4,7 @@
 \usepackage{tikz-cd}
 \usepackage{graphicx}
 \usepackage{bbold}
-
+\usepackage{amsmath}
 
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
@@ -40,7 +40,6 @@ interesting) free constructions.
 
 \section{Introduction}
 
-
 As a group it's fairly safe to say we're mostly used to ``free'' as part of
 the compound word ``free-monad'' (and, if Cam has spoken recently,
 ``free-applicative'') but it's quite a bit more general than that. But before
@@ -58,6 +57,43 @@ So maybe ``free'' things are about ``adding enough extra stuff to get a
 thing''? Let's see!
 
 \section{Things}
+
+First, let's talk about ``things''. We often just ignore the nature of the
+various things we discuss. When we're talking about category theory in general,
+it is *NOT* true that objects are like sets or types and that arrows are like
+functions. There are lots and lots of categories where this is not even remotely
+true.
+
+$\mathbf{Mat}(\mathbb F)$ is a category where the objects are natural numbers
+and arrows are matrices with the endpoints as the dimensions.
+
+\begin{center}
+\begin{tikzcd}
+2
+  \arrow{rr}{m: 2\times 3}
+  \arrow{ddrr}{n \cdot m : 2\times 4}
+&
+&
+3
+\arrow{dd}{n : 3 \times 4}
+\\
+\\
+&
+&
+4
+\\
+\end{tikzcd}
+\end{center}
+
+
+\begin{align}
+Hom(m,n) & \subset & \mathbb{F}^{n \times m} \\
+g \cdot f & : & Hom(n, o) \times Hom(m, n) \rightarrow Hom(m, o) &= & g f \\
+Id_{n} & \in & Hom(n,n) & = & (\delta^{i}_{j}) \\
+\end{align}
+
+$f : n \rightarrow m$ are $m \times n$ matrixes. $id_{n} : n \rightarrow n$ is the $n \times n$ identity matrices.
+
 
 \section{Examples}
 \subsection{Semigroups}
@@ -108,14 +144,12 @@ $\forall x \in S.\: x \cdot x^{-1} \equiv \epsilon \equiv x^{-1} \cdot x$
 
 $\forall x, y \in S.\: x \cdot y \equiv y \cdot x$
 
-\section{Free and forgetful functors}
-
-\section{``Forgetful'' things}
+\section{Forgetting}
 
 Here describe the informal concept of forgetful functors using the stuff,
 structure, properties.
 
-\section{``Free'' things}
+\section{Free things}
 
 Given a set, we can construct a vector space by taking (for some ground
 field $\mathbb k$) finite formal sums of its elements.
