@@ -1,6 +1,9 @@
 
 # Homology notes
 
+This is a sketch of homology by way of Haskell implementations of some
+parts of cubical and simplical homology.
+
 ## Simplical homology
 
 We'll deal mostly with abstract simplical homology here.
