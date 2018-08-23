@@ -12,7 +12,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE MagicHash #-}
 {-# LANGUAGE DataKinds #-}
-module Cubical where
+module Simplical where
 
 import GHC.TypeLits
 import GHC.Exts

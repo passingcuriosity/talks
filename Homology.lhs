@@ -41,9 +41,9 @@ theories to representing and analysing suitable data sets.
 
 \section{Introduction}
 
-%include Cubical.lhs
-
 %include Simplical.lhs
+
+%include Cubical.lhs
 
 \section{Bibliography}
 
