@@ -11,7 +11,9 @@ DEPS:=$(wildcard *.bib *.dot *.eps *.png)
 	pdflatex $<
 	pdflatex $<
 
-all: $(TARGETS)
+all: Homology.pdf
+
+Homology.pdf: $(DEPS) $(SOURCES)
 
 clean:
 	find . -type f -print | xargs git check-ignore | xargs rm

@@ -1,5 +1,4 @@
-\documentclass[a4paper]{article}
-%include polycode.fmt
+\section{Cubical homology}
 
 %if False
 \begin{code}
@@ -25,29 +24,17 @@ import qualified Data.Vector as V
 \end{code}
 %endif
 
-\usepackage{tikz-cd}
-\usepackage{graphicx}
-\usepackage{bbold}
-\usepackage{amsmath}
+\subsection{Intervals and cubes}
 
-\usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
-\addbibresource{presentation.bib}
+The basic building block of cubical sets are {\it intervals}. Our intervals are
+quite simple:
 
-\title{Cubical Homology}
-\author{Thomas Sutton}
+\begin{description}
+\item[Degenerate intervals] are points $[l, l]$.
+\item[Non-degenerate intervals] are unit-length closed intervals $[l, l+1]$.
+\end{description}
 
-\begin{document}
-\maketitle
-
-\begin{abstract}
-
-\end{abstract}
-
-\tableofcontents
-
-\section{Introduction}
-
-\section{Intervals and cubes}
+ For integer coordinates $l \in \mathbb{Z}$.
 
 \begin{code}
 type Z = Integer
@@ -59,7 +46,9 @@ data Interval (k :: Nat) where
 
 deriving instance Eq (Interval k)
 deriving instance Show (Interval k)
+\end{code}
 
+\begin{code}
 data Cube (d :: Nat) (k :: Nat) where
   Cube :: KnownNat k => Interval k -> Cube 1 k
   Times :: (KnownNat k, KnownNat d', KnownNat k') => Interval k -> Cube d' k' -> Cube (1 + d') (k + k')
@@ -79,12 +68,11 @@ instance Eq (Cube d k) where
       otherwise -> False
 \end{code}
 
-\section{Chains}
+\subsection{Chains}
 
 \begin{code}
 infixr 6 :+
 
---| Chains are formal sums of elementary cubes.
 data Chain (d :: Nat) (k :: Nat) where
   Empty :: Chain d k
   (:+) :: (R, Cube d k) -> Chain d k -> Chain d k
@@ -93,24 +81,22 @@ cubes :: Chain d k -> [(R, Cube d k)]
 cubes (k :+ c) = k : cubes c
 cubes Empty    = []
 
-
---| The scalar product of two chains.
 scalarProduct :: Chain d k -> Chain d k -> R
-scalarProduct Empty _ = 0
-scalarProduct _ Empty = 0
-scalarProduct c1 c2 =
-  sum [ a * b
-      | (a,k1) <- cubes c1
-      , (b,k2) <- cubes c2
-      , a == b
-      ]
+scalarProduct Empty _  = 0
+scalarProduct _ Empty  = 0
+scalarProduct c1 c2  =
+  sum  [  a * b
+       |  (a,k1)   <-   cubes c1
+       ,  (b,k2)   <-   cubes c2
+       ,  k1 == k2
+       ]
 \end{code}
 
-\section{Homology}
+\subsection{Homology}
 
-\subsection{Chain groups}
+\subsubsection{Chain groups}
 
-\subsection{The boundary operator}
+\subsubsection{The boundary operator}
 
 Given a cube, it seems intuatively sensible to talk about its boundary. We can
 define an operator that does this: the boundary of a three-dimensional cube 
@@ -140,11 +126,3 @@ of both contiguous and non-contiguous shapes.
 boundary :: Chain d (k + 1) -> Chain d k
 boundary _ = error "nah"
 \end{code}
-
-\section{Bibliography}
-
-\nocite{*}
-
-\printbibliography
-
-\end{document}
