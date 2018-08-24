@@ -41,6 +41,24 @@ theories to representing and analysing suitable data sets.
 
 \section{Introduction}
 
+Homology is a way of assigning a sequence of algebraic objects to other mathematical
+structures. 
+
+\section{Homology}
+
+\subsection{Spaces and cycles}
+
+\subsection{Chain complex}
+
+\subsection{Algebra}
+
+\subsection{Functors}
+
+The various types of homology theory (including the two we'll see below) each
+arises from a functor into the category of chain complexes. Once the objects are
+mapped to chain complexes, the same mechanism (another functor) takes them to
+homology groups in the same way.
+
 %include Simplical.lhs
 
 %include Cubical.lhs
