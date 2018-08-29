@@ -7,7 +7,7 @@ giving or after seeing talks on topics that interest me.
 They are variously incomplete, incorrect, or otherwise unsuitable for others,
 but they are here.
 
-To produce PDFs: install `lhs2tex` and a sufficiently comprehensive modern
+To produce PDFs: install `lhs2TeX` and a sufficiently comprehensive modern
 TeX distribution and run `make`.
 
 Talks

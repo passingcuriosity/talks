@@ -1,13 +1,15 @@
-LHS_SOURCES:=$(shell find . -name "*.lhs")
+LHS_SOURCES:=$(shell grep -l "%include polycode.fmt" $(shell find . -name "*.lhs"))
 TEX_SOURCES:=$(shell find . -name "*.tex")
 TARGETS:=$(LHS_SOURCES:.lhs=.pdf) $(TEX_SOURCES:.tex=.pdf)
 DEPS:=$(wildcard *.bib *.dot *.eps *.png)
 
 %.tex: %.lhs GNUmakefile
-	lhs2TeX -o $@ $<
+	cd $(shell dirname $<) && \
+	lhs2TeX -o $(shell basename $@) $(shell basename $<)
 
 %.pdf: %.tex GNUmakefile $(DEPS)
-	cd $(shell dirname $<) && pdflatex $(shell basename $<) && \
+	cd $(shell dirname $<) && \
+	pdflatex $(shell basename $<) && \
 	biber $(shell basename $(<:.tex=)) && \
 	pdflatex $(shell basename $<) && \
 	pdflatex $(shell basename $<)
