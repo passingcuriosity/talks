@@ -1,0 +1,122 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{ctt.bib}
+
+\title{Some thoughts after an intro to Cubical Type Theory}
+\author{Thomas Sutton}
+\date{23 November 2017}
+
+\newcommand{\fun}[3]{(#1 : #2) \rightarrow #3}
+\newcommand{\labs}[2]{(\lambda #1 . #2)}
+\newcommand{\lapp}[2]{(#1 \: #2)}
+
+\newcommand{\pabs}[2]{{\langle #1 \rangle}.{#2}}
+\newcommand{\papp}[2]{(#1 \: #2)}
+\newcommand{\Path}[3]{{Path\:{#1}\:{#2}\:{#3}}}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+I saw Ben Lippmeier give a short introduction to cubical type
+theory\cite{DBLP:journals/corr/CohenCHM16} at the 100th FP-Syd meeting on 22 November
+2017. Here are some thoughts.
+
+\section{Extension equivalence of functions}
+
+$\forall f g. (\forall x. f x = g x) \rightarrow f = g$
+
+\section{Equality and equivalence}
+
+\begin{itemize}
+\item Syntactic
+\item Definitional
+\item
+\item
+\item Extensional
+\end{itemize}
+
+\section{A fragment of cubical type theory}
+
+We have indexes with which we describe the ends of paths. There are
+{\em not} first class parts of the language -- the only thing we can
+do with them is feed them to path abstractions.
+
+$$i ::= i | 1 | 0 $$
+
+With indices defined we can describe the rest of the language. This
+fragment is fairly standard as these things go, you can feel free to
+assume whatever extensions along the lines of natural numbers, etc.
+
+$$t,u,A,B ::= x | \labs{x}{t} | \lapp{t}{u} $$
+
+$$\Path{A}{t}{u}$$
+$$\pabs{i}{t}$$
+
+\section{Function extensional}
+
+We'll give a proof of the theorem $\forall f g. (\forall x. f x = g x)
+\rightarrow f = g$ by translating it into a term of the appropriate
+type. First we'll translate the $forall f g.$ into assumptions
+asserting that they are functions of the appropriate type, then the
+antecedant as an assumption of a function which constructs paths
+equating applications of the two function, and finally the conclusion:
+a term of the path type equating the $f$ and $g$.
+
+\begin{align}
+  \Gamma &\vdash f : \fun{x}{A}{B} \\
+  \Gamma &\vdash g : \fun{x}{A}{B} \\
+  \Gamma &\vdash p : \fun{x}{A}{\Path{B}{\lapp{f}{x}}{\lapp{g}{x}}} \\
+  \cline{1-2}
+  \Gamma &\vdash \pabs{i}{\labs{x}{
+      \papp{\lapp{p}{x}}{i}
+  }} : \Path{(\fun{x}{A}{B})}{f}{g}
+\end{align}
+
+We read this as: ``given f and g with the appropriate function type
+and a function which, given $x$, constructs a path between $f x$ and
+$g x$, we can produce a path between $f$ and $x$''. The path term
+produced is not too hard to understand:
+
+\begin{itemize}
+  \item $\pabs{i}{t}$ because it's a path.
+  \item $\pabs{i}{\labs{x}{t}}$ because it's between functions.
+  \item $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$ because the value
+    at $x$ is the value of the appropriate end of $p$.
+\end{itemize}
+
+\begin{itemize}
+  \item It's a $Path$ but $\lapp{p}{t}$ is the wrong type so the
+    outermost constructor must be $\pabs{i}{t}$.
+  \item The $Path$ has functions as it's endpoints ($A =
+    \fun{x}{A}{B}$) so body of the path abstraction is a function
+    abstration: $\pabs{i}{\labs{x}{t}}$.
+  \item The function returns the application of $\lapp{f}{x}$ at one
+    end of the path and $\lapp{g}{x}$ at the other. The existing path
+    $p$ does exactly this, so the body will construct a path using
+    $\lapp{p}{x}$ and then pick the end we're interested in: $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$
+\end{itemize}
+
+
+\section{Whither primative paths}
+
+The question that immediately occured to me during the talk is ``where
+are the primitive paths?'' For example, other systems I'm familiar
+with often have for reflexive equality of a term with itself, but
+there are no such terms here.
+
+After a little though later on it became obvious that a path from $t$
+to $t$ is just a path abstraction which ignores the index:
+
+$$
+\frac{\Gamma \vdash t : A}{\Gamma \vdash \pabs{i}{t} : \Path{A}{t}{t}}
+$$
+
+\cite*{*}
+
+\printbibliography
+\end{document}
