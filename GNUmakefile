@@ -3,8 +3,6 @@ TEX_SOURCES:=$(shell find . -name "*.tex")
 TARGETS:=$(LHS_SOURCES:.lhs=.pdf) $(TEX_SOURCES:.tex=.pdf)
 DEPS:=$(wildcard *.bib *.dot *.eps *.png)
 
-.SUFFIXES := .lhs .tex .pdf
-
 %.tex: %.lhs
 	cd $(shell dirname $<) && \
 	lhs2TeX -o $(shell basename $@) $(shell basename $<)
