@@ -1,6 +1,8 @@
 \documentclass[a4paper]{article}
-\usepackage{cite}
 \usepackage{amsmath}
+
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{ctt.bib}
 
 \title{Some thoughts after an intro to Cubical Type Theory}
 \author{Thomas Sutton}
@@ -114,7 +116,7 @@ $$
 \frac{\Gamma \vdash t : A}{\Gamma \vdash \pabs{i}{t} : \Path{A}{t}{t}}
 $$
 
+\cite*{*}
 
-\bibliography{ctt}{}
-\bibliographystyle{acm}
+\printbibliography
 \end{document}
