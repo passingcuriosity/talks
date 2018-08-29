@@ -2,7 +2,6 @@ SOURCES:=$(wildcard *.lhs)
 TARGETS:=$(SOURCES:.lhs=.pdf)
 DEPS:=$(wildcard *.bib)
 
-
 %.tex: %.lhs GNUmakefile
 	lhs2TeX -o $@ $<
 
