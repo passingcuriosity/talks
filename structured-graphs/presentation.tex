@@ -1,0 +1,614 @@
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[ignorenonframetext]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\usepackage{upquote}
+% use microtype if available
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath}
+\usepackage{parskip}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={So you think you can map {[}safely{]}},
+            pdfauthor={Thomas Sutton},
+            pdfborder={0 0 0},
+            breaklinks=true,
+            unicode=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\usepackage{listings}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{So you think you can map}
+\subtitle{Or: A mfix for Free}
+\author{Thomas Sutton}
+\date{25 July 2018}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{%
+\protect\hypertarget{introduction}{%
+Introduction}}
+
+\begin{itemize}
+\tightlist
+\item
+  Algebraic data types\ldots{}
+\item
+  \ldots{}for trees.
+\item
+  \ldots{}for graphs.
+\item
+  Problems.
+\item
+  Solutions.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{algebraic-data-types}{%
+Algebraic Data Types}}
+
+Most of us are familiar with algebraic data types: data types composed
+of sums of products, probably with labels on the various bits and pieces
+so we can easily tell them apart.
+
+I’ll use Haskell syntax because it’s objectively better (and the GADT
+syntax too):
+
+\begin{Shaded}
+  \lstinputlisting[language=Haskell]{Operation.hs}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{recursive-types-give-trees}{%
+Recursive \emph{types} give trees}}
+
+We’re also familiar with recursive types to define structures which can
+contain other instances of themselves: lists, trees, etc.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data} \DataTypeTok{List}\NormalTok{ a }\KeywordTok{where}
+  \DataTypeTok{Nil}\OtherTok{  ::} \DataTypeTok{List}\NormalTok{ a}
+  \DataTypeTok{Cons}\OtherTok{ ::}\NormalTok{ a }\OtherTok{->} \DataTypeTok{List}\NormalTok{ a }\OtherTok{->} \DataTypeTok{List}\NormalTok{ a}
+\end{Highlighting}
+\end{Shaded}
+
+These define trees. “\emph{Inside}” a \texttt{Cons} value is an
+\texttt{a} and another (“smaller”) \texttt{List\ a} value.
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{recursive-values-give-trees}{%
+Recursive \emph{values} give graphs}}
+
+But many languages have a constructs which allow us to construct
+recursive values: values which are defined \emph{in terms of
+themselves}. This shouldn’t be surprising (indeed, recursive type
+definitions work the same way).
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{letrec} in Scheme, Racket, etc.
+\item
+  \texttt{let\ rec} in Ocaml, \texttt{val\ rec} in SML.
+\item
+  \texttt{fix} in various languages.
+\item
+  pretty much every binding form in Haskell.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{``Infinite'' lists}
+
+\begin{Shaded}
+  wot
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}{“Infinite” binary trees}
+
+\begin{Shaded}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}{Self-referential definitions}
+
+\begin{Shaded}
+yes
+\end{Shaded}
+
+\end{fame}
+
+\begin{frame}{Tying the knot}
+
+How do you have two-way links without mutable references? Fixed points!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data} \DataTypeTok{Tree} \KeywordTok{where}
+  \DataTypeTok{Tree}\OtherTok{ ::} \DataTypeTok{Maybe} \DataTypeTok{Tree} \OtherTok{->} \DataTypeTok{Maybe} \DataTypeTok{Tree} \OtherTok{->} \DataTypeTok{Maybe} \DataTypeTok{Tree}
+
+\NormalTok{tree }\FunctionTok{=} \DataTypeTok{Tree} \DataTypeTok{Nothing}\NormalTok{ (}\DataTypeTok{Just}\NormalTok{ left) (}\DataTypeTok{Just}\NormalTok{ right)}
+  \KeywordTok{where}
+\NormalTok{    left }\FunctionTok{=} \DataTypeTok{Tree}\NormalTok{ (}\DataTypeTok{Just}\NormalTok{ parent) }\DataTypeTok{Nothing} \DataTypeTok{Nothing}
+\NormalTok{    right }\FunctionTok{=} \DataTypeTok{Tree}\NormalTok{ (}\DataTypeTok{Just}\NormalTok{ parent) }\DataTypeTok{Nothing} \DataTypeTok{Nothing}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{problems}{%
+Problems}}
+
+\begin{frame}{What does this do?}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{let}\NormalTok{ foo }\FunctionTok{=} \FunctionTok{...}\OtherTok{ ::}\NormalTok{ [}\DataTypeTok{Int}\NormalTok{]}
+\KeywordTok{in}\NormalTok{ map f foo}
+\end{Highlighting}
+\end{Shaded}
+
+When we “fully evaluate” \texttt{bar}:
+
+\begin{enumerate}
+[1.]
+\item
+  How many times will we apply \texttt{f}?
+\item
+  How much memory will we allocate?
+\item
+  What shape is the resulting data structure?
+\item
+  Will it even terminate?
+\item
+  Can you tell before hand?
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Who knows?}
+
+Even when we know that \texttt{foo} is in normal form, that \texttt{map}
+is just \texttt{map}, and that \texttt{f} is just the identity function,
+we don’t know whether \texttt{map\ id\ foo} will terminate, whether the
+result (in normal form) will fit in memory, etc.
+
+Similar problems occur with \texttt{fold}s and various other recursive
+functions.
+
+\end{frame}
+
+\begin{frame}{Then answer}
+
+If we think about it a little bit, the answer to most of the questions
+we asked is not related to the “size” of \texttt{foo} – to the number of
+\texttt{Int}s in memory – but the number of \emph{paths} from
+\texttt{foo}, following pointers, to \texttt{Int}s.
+
+\begin{enumerate}
+[1.]
+\item
+  The answer is not “\texttt{f} is called once per \texttt{String} value
+  in memory”.
+\item
+  The answer is not “\texttt{bar} will use memory proportional to the
+  memory used for \texttt{foo}”.
+\item
+  The answer is not “\texttt{bar} will be the same shape as \texttt{foo}
+  with pointers to \texttt{Int}s in place of the pointers to
+  \texttt{String}s”.
+\item
+  The answer is not “\texttt{foo} is already completely evaluated and
+  fits in finite memory, so of course it will terminate”.
+\end{enumerate}
+
+\end{frame}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{enumerate}
+[1.]
+\item
+  The answer is “once per path following pointers from \texttt{foo} to a
+  \texttt{String} value”.
+\item
+  The answer is “in proportion to the number of paths from \texttt{foo}
+  to a \texttt{String} value”.
+\item
+  The answer is “the same as \texttt{foo} but with all recursion
+  unfolded”.
+\item
+  The answer is “\texttt{bar} will definitely terminate when
+  \texttt{foo} is finite and has no value recursion”.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+What?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  Haskell is a non-strict language.
+\item
+  This means every definition is, potentially, self referential.
+\item
+  This means every recursive \emph{type} allows for recursive
+  \emph{value}s.
+\item
+  But we can’t, in general, \emph{observe} this value-level recursion so
+  we can’t keep from breaking these structures when we map.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{ones ::}\NormalTok{ [}\DataTypeTok{Int}\NormalTok{]}
+\NormalTok{ones }\FunctionTok{=} \DecValTok{1} \FunctionTok{:}\NormalTok{ ones}
+\end{Highlighting}
+\end{Shaded}
+
+We have exactly one cons cell and exactly one \texttt{Int}. But we have
+value recursion.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{twos ::}\NormalTok{ [}\DataTypeTok{Int}\NormalTok{]}
+\NormalTok{twos }\FunctionTok{=}\NormalTok{ map succ ones}
+\end{Highlighting}
+\end{Shaded}
+
+Now we have one cons cell and one \texttt{Int} for each time
+\texttt{map} follows the \texttt{snd} pointer. And \texttt{map} will
+follow the \texttt{snd} pointer an unbounded number of times.
+
+\end{frame}
+
+\begin{frame}
+
+So what? If we define infinite data structures we shouldn’t expect to be
+able to completely process them in finite time!
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Let’s stop “fully evaluating” then.
+
+Maybe we’re going to \texttt{zipWith\ (+)\ selectedSequence\ inputData}
+and one sequence the users can select is \texttt{ones}.
+
+No matter how many values are demanded from \texttt{ones}, at the end
+it’ll have allocated exactly one cons cell and exactly one \texttt{Int}.
+
+If we do the same with \texttt{twos\ =\ map\ succ\ ones} it’ll allocate
+a new cons cell and a new \texttt{Int} value every time \texttt{zipWith}
+demands the next value.
+
+Even when we stop “fully evaluating” recursive values, it’s still
+displeasing that a trivial operation on a tiny data structure can
+changed the time and/or space complexity of using that structure.
+
+\end{frame}
+
+\begin{frame}
+
+Annoyingly there’s no way to really deal with this in Haskell. If you
+didn’t want corecursive data you shouldn’t have picked Haskell.
+
+But the problem occurs in any language with one or more of:
+
+\begin{itemize}
+\tightlist
+\item
+  lazy values
+\item
+  a fixed point operator
+\item
+  mutable references
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{why-am-i-talking-about-this}{%
+Why am I talking about this?}}
+
+Let’s just not do that then!
+
+We can (fast and loose) assume that we don’t construct values that have
+these problems. Done!
+
+\end{frame}
+
+\begin{frame}
+
+But what about recursive structures?
+
+\begin{itemize}
+\tightlist
+\item
+  Streams
+\item
+  Trees
+\item
+  Graphs
+\end{itemize}
+
+There are plenty of structures where we want to have the recursive
+behaviour we just banned.
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{problem}{%
+Problem}}
+
+The problem isn’t \emph{recursion}. It’s \emph{implicit} recursion.
+
+References “back” into the the same structure aren’t bad. We just need
+to be able to distinguish between references “back” into structure we’ve
+already seen and “forward” into new bits of the structure!
+
+Ignoring mutable data this happens when we define a data structure using
+a fixed point (either an explicit operator or implicitly in a language
+like Haskell).
+
+The problem arose when we encounter a fixed point in the data structure
+and handle it as though it is any old point.
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{solution}{%
+Solution}}
+
+So let’s find a way to represent and manipulate fixed points in our data
+structures appropriately.
+
+We could do it by adding a \texttt{Loop} constructor to \texttt{Stream}
+and \texttt{Tree} and \texttt{Graph} and \ldots{}
+
+But that seems a bit boring (and laborious) so instead we’ll use a
+generic representation based on parametric higher order abstract syntax
+(PHOAS) to handle the tricky bits together with some simple functors to
+specialise it to represent streams, trees, graphs, etc.
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{free}{%
+Free}}
+
+Here is the \texttt{Free} data type from Haskell’s standard library.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data} \DataTypeTok{Free}\NormalTok{ f a }\KeywordTok{where}
+  \DataTypeTok{Pure}\OtherTok{ ::}\NormalTok{ a }\OtherTok{->} \DataTypeTok{Free}\NormalTok{ f a}
+  \DataTypeTok{Free}\OtherTok{ ::}\NormalTok{ f (}\DataTypeTok{Free}\NormalTok{ f a) }\OtherTok{->} \DataTypeTok{Free}\NormalTok{ f a}
+\end{Highlighting}
+\end{Shaded}
+
+(Don’t worry, I’m only using GADT syntax to help make some things more
+obvious.)
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{free-the-trees}{%
+Free the trees}}
+
+When \texttt{f} is an algebraic data type and we obey our stricture
+about “not doing that then”, values of type \texttt{Free\ f\ a} are
+trees:
+
+\begin{itemize}
+\item
+  The leaves have an \texttt{a} value wrapped in a \texttt{Pure}
+  constructor.
+\item
+  The nodes have an \texttt{f} of sub-trees wrapped in a \texttt{Free}
+  constructor.
+\end{itemize}
+
+This gives us a “definitely not loopy” structure – they are all tree-ish
+– but not the one we’re after.
+
+\end{frame}
+
+\begin{frame}{%
+\protect\hypertarget{free-variables}{%
+Free variables}}
+
+It’s worth thinking about what we are about. We want:
+
+\begin{enumerate}
+[1.]
+\item
+  To describe data structures that are tree-ish; and
+\item
+  maybe carrying values at certain places in the structure; and
+\item
+  containing references to other parts of the structure; and
+\item
+  maintaining some structural invariants when making these references.
+\end{enumerate}
+
+What does that last bit mean? We want references that
+\textbf{definitely} point to another part of the structure. Which is to
+say it’s impossible to “forge” these recursive references.
+
+\end{frame}
+
+\begin{frame}[fragile]{%
+\protect\hypertarget{adding-recursion-for-free}{%
+Adding recursion for Free}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{fix ::}\NormalTok{ (a }\OtherTok{->}\NormalTok{ a) }\OtherTok{->}\NormalTok{ a}
+\OtherTok{mfix ::}\NormalTok{ (a }\OtherTok{->}\NormalTok{ m a) }\OtherTok{->}\NormalTok{ m a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data} \DataTypeTok{Free}\NormalTok{ f a }\KeywordTok{where}
+  \DataTypeTok{Pure}\OtherTok{ ::}\NormalTok{  a                  }\OtherTok{->} \DataTypeTok{Free}\NormalTok{ f a  }\CommentTok{-- ^ A leaf}
+  \DataTypeTok{Free}\OtherTok{ ::}\NormalTok{       f (}\DataTypeTok{Free}\NormalTok{ f a)  }\OtherTok{->} \DataTypeTok{Free}\NormalTok{ f a  }\CommentTok{-- ^ An f of branches}
+  \DataTypeTok{Fix}\OtherTok{  ::}\NormalTok{ (a }\OtherTok{->}\NormalTok{ f (}\DataTypeTok{Free}\NormalTok{ f a)) }\OtherTok{->} \DataTypeTok{Free}\NormalTok{ f a  }\CommentTok{-- ^ Given a }
+\end{Highlighting}
+\end{Shaded}
+
+But be careful. We’ve moved from
+
+\end{frame}
+
+\end{document}
