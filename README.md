@@ -1,17 +1,35 @@
-Talks
+Words
 =====
 
-This repository contains text and code written for various talks I've
-given. Pretty much just "tech talks" from work.
+This repository contains some notes I've written on various topics before
+giving or after seeing talks on topics that interest me.
 
-- `structured-graphs` trys to explain the key details of the *Functional
-  programming with structured graphs* paper from the perspective of "gee,
-  that looks a lot like the `Free f a` datatype".
+They are variously incomplete, incorrect, or otherwise unsuitable for others,
+but they are here.
 
-- `free-things` trys to explain what "free" means and looks a few examples.
+To produce PDFs: install `lhs2tex` and a sufficiently comprehensive modern
+TeX distribution and run `make`.
 
-- `recursion-schemes` trys to explain enough about recursion schemes to tell
-  what a histozygomorphic prepromorphism does.
+Talks
+-----
 
-- `cubical-types` is some notes I took from a talk about cubical type theory
-  given by Ben Lippmeier.
+- [*So you think you can map*](structured-graphs/) trys to explain the key
+  details of the *Functional programming with structured graphs* paper from
+  the perspective of "gee, that looks a lot like the `Free f a` datatype".
+
+- [*Free things*](free-things/) trys to explain what "free" means and looks a
+  few examples.
+
+- [An untitled recursion schemes talk](recursion-schemes/) trys to explain
+  enough about recursion schemes to explain what a histozygomorphic prepromorphism
+  does.
+
+Notes
+-----
+
+- [*Some notes on cubical type theory*](cubical-types/) is some notes I took
+  from a talk about cubical type theory given by Ben Lippmeier in 2017. One day
+  I will go back and finish them off.
+
+- [*A computational sketch of homology*](homology/) contains some Literate
+  Haskell notes I'm putting together about computational homology.
