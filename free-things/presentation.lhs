@@ -1,16 +1,31 @@
 \documentclass[a4paper]{article}
 %include polycode.fmt
 
-\usepackage{tikz-cd}
-\usepackage{graphicx}
-\usepackage{bbold}
 \usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+\usepackage{url}
+\usepackage{upquote}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[pdftex,unicode]{hyperref}
+\usepackage{color}
+\usepackage{fancyvrb}
+
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\urlstyle{same}  % don't use monospace font for urls
 
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
 
 \title{Free structures}
 \author{Thomas Sutton}
+
+\hypersetup{
+  pdftitle = {Free structures},
+  pdfauthor = {Thomas Sutton}
+}
 
 \begin{document}
 \maketitle
@@ -84,7 +99,6 @@ and arrows are matrices with the endpoints as the dimensions.
 \\
 \end{tikzcd}
 \end{center}
-
 
 \begin{align}
 Hom(m,n) & \subset & \mathbb{F}^{n \times m} \\
@@ -189,6 +203,22 @@ V \arrow{ll}{U}
 \end{center}
 
 \subsection{Categorical view}
+
+Suppose we have some {\it concrete category} $(C, F)$. Then for
+
+$A \in {\mathbf C}$
+
+$X \in {\mathbf Set}$
+
+$i : X \rightarrow F(A)$
+
+
+\begin{center}
+\begin{tikzcd}
+X
+\\
+\end{tikzcd}
+\end{center}
 
 \subsection{Free semigoups}
 
