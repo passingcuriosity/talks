@@ -19,7 +19,7 @@ DEP_PATTERN:=-name '*.bib' -o -name '*.dot' -o -name '*.eps' -o -name '*.png'
 %.pdf: %.tex $$(shell find $$(@D) $(DEP_PATTERN))
 	cd $(@D) && \
 	pdflatex $(<F) && \
-	biber $(<F:.tex=) && \
+	biber $(*F) && \
 	pdflatex $(<F) && \
 	pdflatex $(<F)
 
