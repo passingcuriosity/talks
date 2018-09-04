@@ -19,6 +19,16 @@
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
 
+\defbibenvironment{midbib}
+  {\list
+     {}
+     {\setlength{\leftmargin}{\bibhang}%
+      \setlength{\itemindent}{-\leftmargin}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item}
+
 \newcommand{\underlying}[1]{\lvert #1 \rvert}
 
 \title{Free structures}
@@ -262,8 +272,10 @@ closure}).
 
 \appendix{Diagrams}
 
-\section*{Bibliography}
+\section{Bibliography}
 
-\printbibliography
+\nocite{*}
+
+\printbibliography[heading=none,env=midbib]
 
 \end{document}
