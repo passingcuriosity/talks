@@ -9,13 +9,17 @@
 \date{23 November 2017}
 
 \newcommand{\fun}[3]{(#1 : #2) \rightarrow #3}
-\newcommand{\labs}[2]{(\lambda #1 . #2)}
-\newcommand{\lapp}[2]{(#1 \: #2)}
+\newcommand{\labs}[3]{\lambda #1 : #2. #3}
+\newcommand{\lapp}[2]{#1 \: #2}
+\newcommand{\pair}[2]{(#1 , #2)}
+\newcommand{\lprj}[1]{#1.1}
+\newcommand{\rprj}[1]{#1.2}
+\newcommand{\dprod}[3]{(#1 : #2) \times #3}
 
 \newcommand{\pabs}[2]{{\langle #1 \rangle}.{#2}}
 \newcommand{\papp}[2]{(#1 \: #2)}
 \newcommand{\Path}[3]{{Path\:{#1}\:{#2}\:{#3}}}
-
+\newcommand{\alt}{\: | \:}
 
 \begin{document}
 
@@ -42,20 +46,23 @@ $\forall f g. (\forall x. f x = g x) \rightarrow f = g$
 
 \section{A fragment of cubical type theory}
 
-We have indexes with which we describe the ends of paths. There are
+We have indexes with which we describe the ends of paths. These are
 {\em not} first class parts of the language -- the only thing we can
-do with them is feed them to path abstractions.
-
-$$i ::= i | 1 | 0 $$
+do with them is feed them to path abstractions. There are two indices
+($0$ and $1$ for the source and target of a path) and they have their
+own variables.
 
 With indices defined we can describe the rest of the language. This
 fragment is fairly standard as these things go, you can feel free to
 assume whatever extensions along the lines of natural numbers, etc.
 
-$$t,u,A,B ::= x | \labs{x}{t} | \lapp{t}{u} $$
-
-$$\Path{A}{t}{u}$$
-$$\pabs{i}{t}$$
+\begin{align*}
+  i,j     &::=&i \alt 1 \alt 0\\
+  t,u,A,B &::=&x \alt \labs{x}{A}{t} \alt \lapp{t}{u} \alt \fun{x}{A}{B}\\
+          &|  &\pair{t}{u} \alt \lprj{t} \alt \rprj{t} \alt \dprod{x}{A}{B} \\
+          &   &\Path{A}{t}{u}\\
+          &   &\pabs{i}{t}\\
+\end{align*}
 
 \section{Function extensional}
 
@@ -72,7 +79,7 @@ a term of the path type equating the $f$ and $g$.
   \Gamma &\vdash g : \fun{x}{A}{B} \\
   \Gamma &\vdash p : \fun{x}{A}{\Path{B}{\lapp{f}{x}}{\lapp{g}{x}}} \\
   \cline{1-2}
-  \Gamma &\vdash \pabs{i}{\labs{x}{
+  \Gamma &\vdash \pabs{i}{\labs{x}{A}{
       \papp{\lapp{p}{x}}{i}
   }} : \Path{(\fun{x}{A}{B})}{f}{g}
 \end{align}
@@ -84,8 +91,8 @@ produced is not too hard to understand:
 
 \begin{itemize}
   \item $\pabs{i}{t}$ because it's a path.
-  \item $\pabs{i}{\labs{x}{t}}$ because it's between functions.
-  \item $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$ because the value
+  \item $\pabs{i}{\labs{x}{A}{t}}$ because it's between functions.
+  \item $\pabs{i}{\labs{x}{A}{\papp{\lapp{p}{x}}{i}}}$ because the value
     at $x$ is the value of the appropriate end of $p$.
 \end{itemize}
 
@@ -94,13 +101,13 @@ produced is not too hard to understand:
     outermost constructor must be $\pabs{i}{t}$.
   \item The $Path$ has functions as it's endpoints ($A =
     \fun{x}{A}{B}$) so body of the path abstraction is a function
-    abstration: $\pabs{i}{\labs{x}{t}}$.
+    abstration: $\pabs{i}{\labs{x}{A}{t}}$.
   \item The function returns the application of $\lapp{f}{x}$ at one
     end of the path and $\lapp{g}{x}$ at the other. The existing path
     $p$ does exactly this, so the body will construct a path using
-    $\lapp{p}{x}$ and then pick the end we're interested in: $\pabs{i}{\labs{x}{\papp{\lapp{p}{x}}{i}}}$
+    $\lapp{p}{x}$ and then pick the end we're interested in:
+    $\pabs{i}{\labs{x}{A}{\papp{\lapp{p}{x}}{i}}}$.
 \end{itemize}
-
 
 \section{Whither primative paths}
 
@@ -116,7 +123,7 @@ $$
 \frac{\Gamma \vdash t : A}{\Gamma \vdash \pabs{i}{t} : \Path{A}{t}{t}}
 $$
 
-\cite*{*}
+\nocite{*}
 
 \printbibliography
 \end{document}

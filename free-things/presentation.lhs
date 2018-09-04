@@ -19,6 +19,8 @@
 \usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
 
+\newcommand{\underlying}[1]{\lvert #1 \rvert}
+
 \title{Free structures}
 \author{Thomas Sutton}
 
@@ -34,8 +36,8 @@
 We've heard quite a bit about functional programming with ``free monads'' and
 ``free applicatives'' (most recently from Cam and Afsal) and various extensions
 (e.g. my talk on free monads with explicit fixed points). In this talk I'll try
-to explain what ``free'' means and talk about some other useful (or, at least,
-interesting) free constructions.
+to explain what ``free'' means and talk about some other useful, different, or,
+at least, different free constructions.
 \end{abstract}
 
 \section*{Introduction}
@@ -75,7 +77,7 @@ thing''? Let's see!
 
 First, let's talk about ``things''. We often just ignore the nature of the
 various things we discuss. When we're talking about category theory in general,
-it is *NOT* true that objects are like sets or types and that arrows are like
+it is not true that objects are like sets or types and that arrows are like
 functions. There are lots and lots of categories where this is not even remotely
 true.
 
@@ -230,7 +232,25 @@ This should be familiar from the $+$ iteration operator from regular languages.
 
 We might like to call the free monoid on the set $A$, $A^{*}$.
 
-This should be familiar from the $*$ iteration operator from regular languages.
+This should be familiar $\:^*$ operator from regular languages ({\it Kleene
+closure}).
+
+\begin{center}
+\begin{tikzcd}
+  M(A)
+  \arrow{rr}{\overline{f}}
+&& N
+\\
+\\
+  \underlying{M(A)}
+&& \underlying{N}
+\\\\
+  A
+  \arrow{uu}{i}
+  \arrow{uurr}{f}
+&
+\end{tikzcd}
+\end{center}
 
 \subsection{Free groups}
 
