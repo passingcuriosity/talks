@@ -31,11 +31,11 @@
 
 \newcommand{\underlying}[1]{\lvert #1 \rvert}
 
-\title{Free structures}
+\title{Free things}
 \author{Thomas Sutton}
 
 \hypersetup{
-  pdftitle = {Free structures},
+  pdftitle = {Free things},
   pdfauthor = {Thomas Sutton}
 }
 
