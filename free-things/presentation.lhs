@@ -392,6 +392,52 @@ V \arrow{ll}{U}
 \end{tikzcd}
 \end{center}
 
+Here we have a ``free'' diagram like we drew for free monoids, but now the upper
+diagram is in $\mathbf{Vect}_\mathbb{k}$ instead of $\mathbf{Set}$.
+
+\begin{center}
+\begin{tikzcd}
+  \mathbb{k}[S]
+  \arrow[dotted]{rr}{\overline{f}}
+&& V
+\\
+\\
+  U(\mathbb{k}[S])
+  \arrow{rr}{U(\overline{f})}
+&& U(V)
+\\\\
+  S
+  \arrow{uu}{i}
+  \arrow{uurr}{f}
+&
+\end{tikzcd}
+\end{center}
+
+We can also draw how morphisms in $\mathbf{Set}$ are carried into
+$\mathbf{Vect}_\mathbb{k}$ by the $\mathbb{k}[-]$ functor.
+
+\begin{center}
+\begin{tikzcd}
+  \mathbb{k}[S]
+  \arrow[dotted]{rr}{\overline{j \circ g}}
+&& \mathbb{k}[T]
+\\
+\\
+  U(\mathbb{k}[S])
+  \arrow{rr}{U(\overline{j \circ g})}
+&& U(\mathbb{k}[T])
+\\\\
+  S
+  \arrow{rr}{g}
+  \arrow{uu}{i}
+  \arrow{uurr}{j \circ g}
+&&
+  T
+  \arrow{uu}{j}
+\end{tikzcd}
+\end{center}
+
+
 \subsection{Free categories}
 
 If we have a directed graph $G = (V, E \subset E\times E)$ we can define a free
