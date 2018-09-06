@@ -1,5 +1,3 @@
-\section{Cubical homology}
-
 %if False
 \begin{code}
 {-# LANGUAGE StandaloneDeriving #-}
