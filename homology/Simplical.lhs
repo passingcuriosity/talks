@@ -45,8 +45,6 @@ dimensions:
 
 \subsection{Building simplical complexes}
 
-\subsubsection{$\alpha$-complex}
-
 \subsubsection{Vietoris-Rips complex}
 
 The Vietoris-Rips complex (also the Vietoris complex or Rips complex)
@@ -73,4 +71,6 @@ complex is the nerve of the set of ε-balls centered at points of X. By the nerv
 lemma, the Čech complex is homotopy equivalent to the union of the balls.
 \end{quote}
 
-The \check{C}ech complex is a sub-complex of the Vietoris-Rips complex.
+The \u{C}ech complex is a sub-complex of the Vietoris-Rips complex.
+
+\subsubsection{$\alpha$-complex}
