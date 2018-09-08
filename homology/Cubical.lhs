@@ -26,6 +26,7 @@ import qualified Data.Vector as V
 %format Z = "\mathbb{Z}"
 %format R = "\mathbb{R}"
 %format :~: = "\sim"
+%format :+ = "\plus"
 
 \subsection{Intervals and cubes}
 
@@ -98,12 +99,12 @@ the two remaining cubes have compatible shapes.
 
 \begin{code}
 instance Eq (Cube d k) where
-  (Cube k1) == (Cube k2) = k1 == k2
-  (Times c1 k1) == (Times c2 k2) =
+  (Cube k1)      == (Cube k2)      = k1 == k2
+  (Times c1 k1)  == (Times c2 k2)  =
     case (c1, c2, sameShape k1 k2) of
-      (D l1, D l2, Just (Refl, Refl)) -> l1 == l2 && k1 == k2
-      (I l1, I l2, Just (Refl, Refl)) -> l1 == l2 && k1 == k2
-      otherwise -> False
+      (D l1,  D l2,  Just (Refl, Refl))  -> l1 == l2 && k1 == k2
+      (I l1,  I l2,  Just (Refl, Refl))  -> l1 == l2 && k1 == k2
+      otherwise                          -> False
 \end{code}
 
 \subsection{Chains}
@@ -112,17 +113,17 @@ instance Eq (Cube d k) where
 infixr 6 :+
 
 data Chain (d :: Nat) (k :: Nat) where
-  Empty :: Chain d k
-  (:+) :: (R, Cube d k) -> Chain d k -> Chain d k
+  Empty  ::                                Chain d k
+  (:+)   :: (R, Cube d k) -> Chain d k ->  Chain d k
 
 cubes :: Chain d k -> [(R, Cube d k)]
-cubes (k :+ c) = k : cubes c
-cubes Empty    = []
+cubes Empty     = []
+cubes (k :+ c)  = k : cubes c
 
 scalarProduct :: Chain d k -> Chain d k -> R
-scalarProduct Empty _  = 0
-scalarProduct _ Empty  = 0
-scalarProduct c1 c2  =
+scalarProduct  Empty  _      = 0
+scalarProduct  _      Empty  = 0
+scalarProduct  c1     c2     =
   sum  [  a * b
        |  (a,k1)   <-   cubes c1
        ,  (b,k2)   <-   cubes c2
