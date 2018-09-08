@@ -23,6 +23,9 @@ import qualified Data.Vector as V
 
 \end{code}
 %endif
+%format Z = "\mathbb{Z}"
+%format R = "\mathbb{R}"
+%format :~: = "\sim"
 
 \subsection{Intervals and cubes}
 
@@ -30,41 +33,76 @@ The basic building block of cubical sets are {\it intervals}. Our intervals are
 quite simple:
 
 \begin{description}
-\item[Degenerate intervals] are points $[l, l]$.
-\item[Non-degenerate intervals] are unit-length closed intervals $[l, l+1]$.
+\item[Degenerate intervals] are points $[l, l]$ for $l \in \mathbb{Z}$.
+\item[Non-degenerate intervals] are unit-length closed intervals $[l, l+1]$ for $l \in \mathbb{Z}$.
 \end{description}
 
- For integer coordinates $l \in \mathbb{Z}$.
+A {\it cube} is formed by the product of one or more such intervals: $c_1 = i_1 \times ... \times i_n$.
+The number of intervals in a cube is its {\it embedding} number and corresponds to the dimension of the
+space within which the cube is embedded (i.e. $\mathbb{R}^k$). The number of non-degenerate intervals
+within the cube is its {\it dimension}. You might thing of a two-dimensional piece of paper sat on a
+table in the three-dimensional space of a library: it might be represented by a cube with embedding
+number $3$ and dimension $2$ like, e.g., $[2,2]\times[1,2]\times[8,9]$.
+
+We can track both of these numbers in the types of our cubes. First we'll parameterise our @Interval@
+datatype with a natural number tracking ``how many dimensions'' there are in the interval (zero for
+degenerate and one for non-degenerate intervals).
 
 \begin{code}
 type Z = Integer
 type R = Double
 
 data Interval (k :: Nat) where
-  D :: Z -> Interval 0
-  I :: Z -> Interval 1
+  D  :: Z -> Interval 0
+  I  :: Z -> Interval 1
 
 deriving instance Eq (Interval k)
 deriving instance Show (Interval k)
 \end{code}
 
+Then we can have two natural number parameters to our @Cube@ datatype. The embedding number can be
+calculated by tracking the number of intervals in the cube (like the standard approach to length-indexed
+vectors) and the dimension can be calculated by adding up the parameters of the intervals contained in
+the cube.
+
 \begin{code}
 data Cube (d :: Nat) (k :: Nat) where
-  Cube :: KnownNat k => Interval k -> Cube 1 k
-  Times :: (KnownNat k, KnownNat d', KnownNat k') => Interval k -> Cube d' k' -> Cube (1 + d') (k + k')
+  Cube   ::  Interval k -> Cube 1 k
+  Times  ::  (KnownNat k, KnownNat d', KnownNat k')
+         =>  Interval k -> Cube d' k' -> Cube (1 + d') (k + k')
+\end{code}
 
+To implement equality (and some other binary operations on cubes) we'll need to ensure that they have
+matching shapes. They way we've encoded things, this means manually checking that the parts of a cube
+still match as we perform our structural recursion. A helper can help reduce the boiler plate here:
+
+\begin{code}
+sameShape  :: (KnownNat d1, KnownNat d2, KnownNat k1, KnownNat k2)
+           => Cube d1 k1
+           -> Cube d2 k2
+           -> Maybe (d1 :~: d2, k1 :~: k2)
+sameShape (c1 :: Cube d1 k1) (c2 :: Cube d2 k2) =
+    let  d1  = Proxy :: Proxy d1
+         d2  = Proxy :: Proxy d2
+         k1  = Proxy :: Proxy k1
+         k2  = Proxy :: Proxy k2
+    in case (sameNat d1 d2, sameNat k1 k2) of
+        (Just p1, Just p2)  -> Just (p1, p2)
+        _                   -> Nothing
+\end{code}
+
+With this in hand we're able to write the @Eq@ instance for cubes. Two of the same type (i.e. embedding
+and dimension) are equal when their first intervals have the same sort and coordinate and rest of the
+two cubes are both recursively equal. The only bit of awkwardness is that we need to manually check that
+the two remaining cubes have compatible shapes.
+
+\begin{code}
 instance Eq (Cube d k) where
   (Cube k1) == (Cube k2) = k1 == k2
-  (Times c1 (k1 :: Cube d1 k1)) == (Times c2 (k2 :: Cube d2 k2) ) = 
-    case (c1, c2) of
-      (D l1, D l2) | l1 == l2 ->
-        case (sameNat (Proxy :: Proxy d1) (Proxy :: Proxy d2), sameNat (Proxy :: Proxy k1) (Proxy :: Proxy k2)) of
-          (Just Refl, Just Refl) -> k1 == k2
-          _  -> False
-      (I l1, I l2) | l1 == l2 ->
-        case (sameNat (Proxy :: Proxy d1) (Proxy :: Proxy d2), sameNat (Proxy :: Proxy k1) (Proxy :: Proxy k2)) of
-          (Just Refl, Just Refl) -> k1 == k2
-          _  -> False
+  (Times c1 k1) == (Times c2 k2) =
+    case (c1, c2, sameShape k1 k2) of
+      (D l1, D l2, Just (Refl, Refl)) -> l1 == l2 && k1 == k2
+      (I l1, I l2, Just (Refl, Refl)) -> l1 == l2 && k1 == k2
       otherwise -> False
 \end{code}
 
