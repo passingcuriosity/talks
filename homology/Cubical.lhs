@@ -12,10 +12,11 @@
 {-# LANGUAGE DataKinds #-}
 module Cubical where
 
-import GHC.TypeLits
-import GHC.Exts
-import Data.Proxy
-import Data.Type.Equality
+import           GHC.TypeLits
+import           GHC.Exts
+import           Data.Proxy
+import           Data.Type.Equality
+import           Data.Monoid
 import           Data.Vector (Vector)
 import qualified Data.Vector as V
 import Prelude hiding (product)
@@ -92,13 +93,20 @@ data Cube (d :: Nat) (k :: Nat) where
          =>  Cube 1 k -> Cube d' k' -> Cube d2 k2
 
 deriving instance Show (Cube d k)
+
+fmt :: (KnownNat d, KnownNat k) => Cube d k -> String
+fmt (D l) = "[" <> show l <> "]"
+fmt (I l) = "[" <> show l <> "," <> show (l + 1) <> "]"
+fmt (i :*: c) = fmt i <> " × " <> fmt c
 \end{code}
 
 We've replaced types like @Interval k@ with @Cube 1 k@ which has the same values: @Interval 0@ and @Interval 1@
 are now @Cube 1 0@ and @Cube 1 1@ which can only be constructed using @D :: Z -> Cube 1 0@ and @I :: Cube 1 1@.
-This lets us write cubes straighforwardly in Haskell:
+This lets us write cubes straighforwardly in Haskell and format them nicely:
 
 \eval{:t D 1 :*: I 0 :*: D 2}
+
+\eval{putStrLn . fmt $ D 1 :*: I 0 :*: D 2}
 
 To implement equality (and some other binary operations on cubes) we'll need to ensure that they have
 matching shapes. They way we've encoded things, this means manually checking that the parts of a cube
@@ -126,28 +134,29 @@ the two remaining cubes have compatible shapes.
 
 \begin{code}
 instance Eq (Cube d k) where
-  (D l1)       ==  (D l2)       = l1 == l2
-  (I l1)       ==  (I l2)       = l1 == l2
-  (c1 :*: k1)  ==  (c2 :*: k2)  =
-    case (c1, c2, sameSpace k1 k2) of
-      (D l1, D l2, Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
-      (I l1, I l2, Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
-      otherwise                        ->  False
-  _            ==  _            = False
+  c1 == c2 =
+    case (c1, c2) of
+      (D l1       , D l2       )  -> l1 == l2
+      (I l1       , I l2       )  -> l1 == l2
+      (i1 :*: k1  , i2 :*: k2  )  ->
+        case (i1, i2, sameSpace k1 k2) of
+          (D l1,  D l2,  Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
+          (I l1,  I l2,  Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
+          otherwise ->  False
+      otherwise -> False
 \end{code}
 
-We're now also in the position to write the {\it cubical product} operation:
+We're now also in the position to write the {\it cubical product} operation.
 
 \begin{code}
-product :: (KnownNat d1, KnownNat d2, KnownNat k1, KnownNat k2, KnownNat d, KnownNat k,
-            1 <= d1,
-            d ~ (d1 + d2), k ~ (k1 + k2))
-        => Cube d1 k1
-        -> Cube d2 k2
-        -> Cube d k
-product c@(D _) c2 = c :*: c2
-product c@(I _) c2 = c :*: c2
-product _ _ = error "depends"
+product  :: ( KnownNat d1, KnownNat d2
+            , KnownNat k1, KnownNat k2
+            , KnownNat d, KnownNat k
+            , d ~ (d1 + d2), k ~ (k1 + k2))
+         => Cube d1 k1 -> Cube d2 k2 -> Cube d k
+product i@(D _)    c2  = i :*: c2
+product i@(I _)    c2  = i :*: c2
+product (i :*: c)  c2  = error "TODO: Implement recursive case of cubical product"
 \end{code}
 
 \subsection{Chains}
