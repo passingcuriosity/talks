@@ -60,6 +60,6 @@ theories to representing and analysing suitable data sets.
 
 \nocite{*}
 
-\printbibliography
+\printbibliography[heading=none]
 
 \end{document}
