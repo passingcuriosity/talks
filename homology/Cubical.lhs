@@ -18,13 +18,18 @@ import Data.Proxy
 import Data.Type.Equality
 import           Data.Vector (Vector)
 import qualified Data.Vector as V
+import Prelude hiding (product)
 
 \end{code}
 %endif
+
+%options ghci -XRankNTypes -fprint-explicit-foralls
+
 %format Z = "\mathbb{Z}"
 %format R = "\mathbb{R}"
-%format :~: = "\sim"
-%format :+ = "\plus"
+%format :~: = "\sim "
+%format :*: = " \times "
+%format :+ = "{:}{\plus}"
 
 \subsection{Intervals and cubes}
 
@@ -52,35 +57,59 @@ type Z = Integer
 type R = Double
 
 data Interval (k :: Nat) where
-  D  :: Z -> Interval 0
-  I  :: Z -> Interval 1
+  Degen  :: Z -> Interval 0
+  Inter  :: Z -> Interval 1
 
 deriving instance Eq (Interval k)
 deriving instance Show (Interval k)
 \end{code}
 
-Then we can have two natural number parameters to our @Cube@ datatype. The embedding number can be
-calculated by tracking the number of intervals in the cube (like the standard approach to length-indexed
-vectors) and the dimension can be calculated by adding up the parameters of the intervals contained in
-the cube.
+Along similar lines, we can parameters to our @Cube@ datatype by two natural numbers. The embedding number
+can be calculated by tracking the number of intervals in the cube (like the standard approach to
+length-indexed vectors) and the dimension can be calculated by adding up the parameters of the intervals
+contained in the cube.
 
-\begin{code}
+\begin{spec}
+infixr 6 :*:
+
 data Cube (d :: Nat) (k :: Nat) where
   Cube   ::  Interval k -> Cube 1 k
-  Times  ::  (KnownNat k, KnownNat d', KnownNat k')
-         =>  Interval k -> Cube d' k' -> Cube (1 + d') (k + k')
+  (:*:)  ::  (KnownNat k, KnownNat k', KnownNat d', d2 ~ (1 + d'), k2 ~ (k + k'))
+         =>  Interval k -> Cube d' k' -> Cube d2 k2
+\end{spec}
+
+Alternatively, we can merge the constructors from @Interval k@ and @Cube d k@ into a single datatype to get
+slightly nicer syntax without any loss of expressivity or type safety. We can remove the @Cube@ constructor
+which embeds an @Interval k@ into @Cube 1 k@ and replace it with the @D@ and @I@ constructors:
+
+\begin{code}
+infixr 6 :*:
+
+data Cube (d :: Nat) (k :: Nat) where
+  D      :: Z -> Cube 1 0
+  I      :: Z -> Cube 1 1
+  (:*:)  ::  (KnownNat k, KnownNat k', KnownNat d', d2 ~ (1 + d'), k2 ~ (k + k'))
+         =>  Cube 1 k -> Cube d' k' -> Cube d2 k2
+
+deriving instance Show (Cube d k)
 \end{code}
+
+We've replaced types like @Interval k@ with @Cube 1 k@ which has the same values: @Interval 0@ and @Interval 1@
+are now @Cube 1 0@ and @Cube 1 1@ which can only be constructed using @D :: Z -> Cube 1 0@ and @I :: Cube 1 1@.
+This lets us write cubes straighforwardly in Haskell:
+
+\eval{:t D 1 :*: I 0 :*: D 2}
 
 To implement equality (and some other binary operations on cubes) we'll need to ensure that they have
 matching shapes. They way we've encoded things, this means manually checking that the parts of a cube
 still match as we perform our structural recursion. A helper can help reduce the boiler plate here:
 
 \begin{code}
-sameShape  :: (KnownNat d1, KnownNat d2, KnownNat k1, KnownNat k2)
+sameSpace  :: (KnownNat d1, KnownNat d2, KnownNat k1, KnownNat k2)
            => Cube d1 k1
            -> Cube d2 k2
            -> Maybe (d1 :~: d2, k1 :~: k2)
-sameShape (c1 :: Cube d1 k1) (c2 :: Cube d2 k2) =
+sameSpace (c1 :: Cube d1 k1) (c2 :: Cube d2 k2) =
     let  d1  = Proxy :: Proxy d1
          d2  = Proxy :: Proxy d2
          k1  = Proxy :: Proxy k1
@@ -97,12 +126,28 @@ the two remaining cubes have compatible shapes.
 
 \begin{code}
 instance Eq (Cube d k) where
-  (Cube k1)      == (Cube k2)      = k1 == k2
-  (Times c1 k1)  == (Times c2 k2)  =
-    case (c1, c2, sameShape k1 k2) of
-      (D l1,  D l2,  Just (Refl, Refl))  -> l1 == l2 && k1 == k2
-      (I l1,  I l2,  Just (Refl, Refl))  -> l1 == l2 && k1 == k2
-      otherwise                          -> False
+  (D l1)       ==  (D l2)       = l1 == l2
+  (I l1)       ==  (I l2)       = l1 == l2
+  (c1 :*: k1)  ==  (c2 :*: k2)  =
+    case (c1, c2, sameSpace k1 k2) of
+      (D l1, D l2, Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
+      (I l1, I l2, Just (Refl, Refl))  ->  l1 == l2 && k1 == k2
+      otherwise                        ->  False
+  _            ==  _            = False
+\end{code}
+
+We're now also in the position to write the {\it cubical product} operation:
+
+\begin{code}
+product :: (KnownNat d1, KnownNat d2, KnownNat k1, KnownNat k2, KnownNat d, KnownNat k,
+            1 <= d1,
+            d ~ (d1 + d2), k ~ (k1 + k2))
+        => Cube d1 k1
+        -> Cube d2 k2
+        -> Cube d k
+product c@(D _) c2 = c :*: c2
+product c@(I _) c2 = c :*: c2
+product _ _ = error "depends"
 \end{code}
 
 \subsection{Chains}
@@ -111,17 +156,17 @@ instance Eq (Cube d k) where
 infixr 6 :+
 
 data Chain (d :: Nat) (k :: Nat) where
-  Empty  ::                                Chain d k
+  Nil    ::                                Chain d k
   (:+)   :: (R, Cube d k) -> Chain d k ->  Chain d k
 
 cubes :: Chain d k -> [(R, Cube d k)]
-cubes Empty     = []
+cubes Nil       = []
 cubes (k :+ c)  = k : cubes c
 
 scalarProduct :: Chain d k -> Chain d k -> R
-scalarProduct  Empty  _      = 0
-scalarProduct  _      Empty  = 0
-scalarProduct  c1     c2     =
+scalarProduct  Nil    _    = 0
+scalarProduct  _      Nil  = 0
+scalarProduct  c1     c2   =
   sum  [  a * b
        |  (a,k1)   <-   cubes c1
        ,  (b,k2)   <-   cubes c2
