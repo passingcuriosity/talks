@@ -32,3 +32,8 @@ An elementary interval $I$ is either
 
 1. "degenerate": $I=[l,l]$ for some $l \in \mathbb{Z}$; or
 2. "non-degenerate" : $I=[l,l+1]$ for some $l \in \mathbb{Z}$.
+
+## Links
+
+https://mathoverflow.net/questions/310384/reference-on-persistent-homology
+
