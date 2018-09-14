@@ -35,8 +35,8 @@
 \maketitle
 \begin{abstract}
 Queueing theory provides mathematical tools to analyse the behaviour of systems
-of agents which make and service requests. In this document I'll summarise
-methods to analyse some simple queueing systems.
+of agents which make and service requests. This document provides an introduction
+to the analysis of some simple queueing systems.
 \end{abstract}
 
 \tableofcontents
@@ -45,12 +45,27 @@ methods to analyse some simple queueing systems.
 
 \section{Introduction}
 
-Queueing theory (note the spelling) is a field of mathematics that analyses the
-behaviour of systems that involve {\it queueing}. The results of such analyses
-are generally probabalistic statistics which can help guide the optimisation of
-such systems.
+{\it Queueing theory}\footnote{The spelling is traditional} is a field of
+mathematics that analyses the behaviour of systems that involve {\it queueing}.
+The results of such analyses are generally probabalistic statistics which can
+help guide the optimisation of such systems.
 
 \section{Models of queueing}
+
+Queueing systems can be characterised more or less completely by specifying:
+
+\begin{itemize}
+\item The {\it arrival} process, which adds new work items to the queue.
+\item The {\it service} distribution.
+\item The number of {\it channels} which process work items.
+\item The {\it capacity} of the system, including in-progress and queued work
+items.
+\item The size of the {\it calling population}.
+\item The {\it discipline} which determines the order in which work items are
+processed.
+\end{itemize}
+
+These factors are often written as a formula in {\it Kendall's notation}.
 
 Single server vs multi server.
 
