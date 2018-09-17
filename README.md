@@ -34,5 +34,5 @@ Notes
 - [*A computational sketch of homology*](homology/) contains some Literate
   Haskell notes I'm putting together about computational homology.
 
-- [*Some notes on queueing theory*][queueing/] contains notes on simple analyses
+- [*Some notes on queueing theory*](queueing/) contains notes on simple analyses
   of queueing systems.
