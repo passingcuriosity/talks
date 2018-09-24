@@ -47,7 +47,7 @@ to the analysis of some simple queueing systems.
 
 \section{Introduction}
 
-{\it Queueing theory}\footnote{The misspelling is traditional} is a field of
+{\it Queueing theory}\footnote{The spelling is traditional} is a field of
 mathematics that analyses the behaviour of systems which involve {\it queueing}.
 The results of such analyses are generally probabalistic statistics which can
 help guide the optimisation of such systems.
@@ -57,17 +57,31 @@ help guide the optimisation of such systems.
 Queueing systems can be characterised more or less completely by specifying:
 
 \begin{itemize}
-\item The {\it arrival} process, which adds new work items to the queue.
-\item The {\it service} distribution.
-\item The number of {\it channels} which process work items.
-\item The {\it capacity} of the system, including in-progress and queued work
-items.
-\item The size of the {\it calling population}.
-\item The {\it discipline} which determines the order in which work items are
-processed.
+\item The {\it arrival rate} describes the rate at which new work items are
+added to the queue. It is often assumed that the arrival rate is defined by
+a Poisson distribution.
+
+\item The {\it service rate} describes the rate at which work items are
+completed. The service rate is often defined as a negative exponential
+distribution.
+
+\item The number of {\it servers} determines the number of work items which can
+be processed simultaneously. This might reflect the number of checkouts at a
+shop, the number of cores in a computer system, or the number of shower stalls
+in a locker room.
+
+\item The {\it capacity} of the system describes the total number of work items,
+in-progress and queued, in the system.
+
+\item The {\it calling population} is the source of work items. Often the
+calling population of a system is essentially unlimited, but in some situations
+there might be a fixed limit of, e.g., busses which visit the bus company
+garage.
+
+\item The {\it queue discipline} determines the order in which waiting work
+items are processed. Perhaps the most common example is ``first-in, first-out''.
 \end{itemize}
 
-These factors are often written as a formula in {\it Kendall's notation}.
 
 Single server vs multi server.
 
