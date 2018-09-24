@@ -45,31 +45,37 @@ dimensions:
 
 \subsection{Building simplical complexes}
 
+We often want to construct a simplical complex from a set of data points. We'll look
+at three algorithms that can do just this. They each work by enumerating finite sets
+of points and determining whether they are ``close enough'' in some sense or other.
+These algorithms range in complexity, so selecting an appropriate algorithm can be
+quite important when analysing a large data set.
+
 \subsubsection{Vietoris-Rips complex}
 
-The Vietoris-Rips complex (also the Vietoris complex or Rips complex)
+The Vietoris-Rips complex (also the Vietoris complex or Rips complex) on a set of
+points contains a simplex corresponding to each finite subset of points
 
 \begin{quote}
-defined from any metric space M and distance δ by forming a simplex for every
-finite set of points that has diameter at most δ.
+defined from any metric space M and distance $\delta$ by forming a simplex for every
+finite set of points that has diameter at most $\delta$.
 
 If a finite set S has the property that the distance between every pair of
-points in S is at most δ, then we include S as a simplex in the complex.
+points in S is at most $\delta$, then we include S as a simplex in the complex.
 \end{quote}
 
 \subsubsection{\u Cech complex}
 
 The \u Cech complex $\check{C}_{\varepsilon}(X)$ of a pointcloud $X$ and distance
-$\varepsilon > 0$
+$\varepsilon > 0$ contains a simplex corresponding to each finite set of points
+such that the intersection of the $\varepsilon$-balls centred on each point it not
+empty:
 
-\begin{quote}
-Take the elements of X as the vertex set of ${\check {C}}_{\varepsilon }(X)$.
-Then, for each $\sigma \subset X$, let
-$\sigma \in {\check {C}}_{\varepsilon }(X)$ if the set of ε-balls
-centered at points of σ has a nonempty intersection. In other words, the Čech
-complex is the nerve of the set of ε-balls centered at points of X. By the nerve
-lemma, the Čech complex is homotopy equivalent to the union of the balls.
-\end{quote}
+$$
+\check{C}_{\varepsilon}(X)
+:=
+\{ \sigma \in \mathcal{P}(X)  || \cap_{p \in \sigma} B_{\varepsilon}(p) \not\equiv \emptyset \}
+$$
 
 The \u{C}ech complex is a sub-complex of the Vietoris-Rips complex.
 

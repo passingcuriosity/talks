@@ -97,7 +97,7 @@ deriving instance Show (Cube d k)
 fmt :: (KnownNat d, KnownNat k) => Cube d k -> String
 fmt (D l) = "[" <> show l <> "]"
 fmt (I l) = "[" <> show l <> "," <> show (l + 1) <> "]"
-fmt (i :*: c) = fmt i <> " × " <> fmt c
+fmt (i :*: c) = fmt i <> " * " <> fmt c
 \end{code}
 
 We've replaced types like @Interval k@ with @Cube 1 k@ which has the same values: @Interval 0@ and @Interval 1@

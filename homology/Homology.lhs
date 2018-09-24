@@ -41,7 +41,22 @@ theories to representing and analysing suitable data sets.
 
 \clearpage
 
-\section{Overview}
+\section{Introduction}
+
+Homology is a way of assigning a sequence of algebraic objects to other mathematical
+structures. In this document we're interested in homology theories that can help us
+analyse and understand topological spaces using techniques which can be implemented
+in computer programs. We'll examine two examples of such theories:
+
+\begin{itemize}
+\item {\it Simplical homology} is founded on simplices -- triangles generalised
+to arbitrary dimensions.
+\item {\it Cubical homology} is founded on elementary cubes -- cubes of
+arbitrary dimensions restricted to vertices at integer coordinates and edges
+of unit length.
+\end{itemize}
+
+\section{A quick sketch}
 
 %include Theory.lhs
 

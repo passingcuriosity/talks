@@ -45,8 +45,8 @@ to the analysis of some simple queueing systems.
 
 \section{Introduction}
 
-{\it Queueing theory}\footnote{The spelling is traditional} is a field of
-mathematics that analyses the behaviour of systems that involve {\it queueing}.
+{\it Queueing theory}\footnote{The misspelling is traditional} is a field of
+mathematics that analyses the behaviour of systems which involve {\it queueing}.
 The results of such analyses are generally probabalistic statistics which can
 help guide the optimisation of such systems.
 
@@ -185,7 +185,7 @@ $\lambda = 10$ per hour or 60 mins.
 
 So $\lambda = \frac{10}{6}$ calls per minute $= \frac{1}{6}$.
 
-$$P(interarrival time \leq 4) = 1 – e^{-4\times\frac{1}{6}} = 1 – e^{-\frac{2}{3}} \approx 􏰁 0.4866$$
+$$P(interarrival time \leq 4) = 1 – e^{-4\times\frac{1}{6}} = 1 – e^{-\frac{2}{3}} \approx 0.4866$$
 \end{example}
 
 \subsection{Steady state}
