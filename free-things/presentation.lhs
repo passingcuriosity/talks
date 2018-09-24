@@ -3,20 +3,21 @@
 
 \usepackage{amsmath}
 \usepackage{bbold}
-\usepackage{graphicx}
-\usepackage{tikz-cd}
-\usepackage{url}
-\usepackage{upquote}
-\usepackage{microtype}
-\usepackage{parskip}
-\usepackage[pdftex,unicode]{hyperref}
 \usepackage{color}
 \usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{upquote}
+\usepackage{url}
 
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-\urlstyle{same}  % don't use monospace font for urls
+\usepackage[backend=biber,style=trad-abbrv]{biblatex}
+\usepackage[hidelinks,pdftex,unicode]{hyperref}
 
-\usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
+\urlstyle{same}
+\UseMicrotypeSet[protrusion]{basicmath}
+
 \addbibresource{presentation.bib}
 
 \defbibenvironment{midbib}

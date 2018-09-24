@@ -1,6 +1,5 @@
-\documentclass[]{article}
+\documentclass[a4paper]{article}
 %include polycode.fmt
-
 %if False
 \begin{code}
 {-# OPTIONS -XScopedTypeVariables -XGADTs -XRankNTypes -XDeriveFunctor -XDeriveTraversable -XDeriveFoldable  -XTypeOperators -fwarn-incomplete-patterns  -XNoMonomorphismRestriction -XFlexibleInstances #-}
@@ -9,41 +8,41 @@ import Data.Typeable (Typeable)
 import Data.Function (fix)
 \end{code}
 %endif
+
+%format <$> = "\mathbin{<\hspace{-1.6pt}\mathclap{\raisebox{0.1pt}{\scalebox{.8}{\$}}}\hspace{-1.6pt}>}"
+%format ~> = "\rightsquigarrow"
+%format forall a = "\forall " a
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbold}
+\usepackage{color}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{upquote}
+\usepackage{url}
+
+\usepackage[backend=biber,style=trad-abbrv]{biblatex}
+\usepackage[hidelinks,pdftex,unicode]{hyperref}
+
+
 \usepackage{comment}
 
 \usepackage{mathtools}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{textcomp} % provides euro and other symbols
 
-%format <$> = "\mathbin{<\hspace{-1.6pt}\mathclap{\raisebox{0.1pt}{\scalebox{.8}{\$}}}\hspace{-1.6pt}>}"
-%format ~> = "\rightsquigarrow"
-%format forall a = "\forall " a
+\urlstyle{same}
+\UseMicrotypeSet[protrusion]{basicmath}
 
-% use upquote if available, for straight quotes in verbatim environments
-\usepackage{upquote}
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-\usepackage{parskip}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdftitle={So you think you can map},
-            pdfauthor={Thomas Sutton},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\usepackage{color}
-\usepackage{fancyvrb}
-\usepackage[backend=biber,
-style=alphabetic,
-citestyle=authoryear
-]{biblatex}
 \addbibresource{presentation.bib}
-
 
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes.multipart,chains,arrows}
@@ -104,6 +103,11 @@ citestyle=authoryear
 \subtitle{Or: a Fix for Free}
 \author{Thomas Sutton}
 \date{25 July 2018}
+
+\hypersetup{
+  pdftitle={So you think you can map},
+  pdfauthor={Thomas Sutton}
+}
 
 \begin{document}
 \maketitle

@@ -1,30 +1,32 @@
 \documentclass[a4paper]{article}
 %include polycode.fmt
 
-\usepackage{url}
-\usepackage{tikz-cd}
-\usepackage{graphicx}
-\usepackage{bbold}
 \usepackage{amsmath}
-\usepackage{upquote}
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-\usepackage{parskip}
-\usepackage{hyperref}
-\hypersetup{unicode=true,
-            pdftitle={A computational sketch of homology},
-            pdfauthor={Thomas Sutton},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}
+\usepackage{bbold}
 \usepackage{color}
 \usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{upquote}
+\usepackage{url}
 
 \usepackage[backend=biber,style=trad-abbrv]{biblatex}
+\usepackage[hidelinks,pdftex,unicode]{hyperref}
+
+\urlstyle{same}
+\UseMicrotypeSet[protrusion]{basicmath}
+
 \addbibresource{presentation.bib}
 
 \title{A computational sketch of homology}
 \author{Thomas Sutton}
+
+\hypersetup{
+  pdftitle = {A computational sketch of homology},
+  pdfauthor = {Thomas Sutton}
+}
 
 \begin{document}
 \maketitle

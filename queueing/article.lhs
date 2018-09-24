@@ -3,24 +3,25 @@
 
 \usepackage{amsmath}
 \usepackage{bbold}
-\usepackage{graphicx}
-\usepackage{tikz-cd}
-\usepackage{url}
-\usepackage{upquote}
-\usepackage{microtype}
-\usepackage{parskip}
-\usepackage[pdftex,unicode]{hyperref}
 \usepackage{color}
 \usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{tikz-cd}
+\usepackage{upquote}
+\usepackage{url}
+
+\usepackage[backend=biber,style=trad-abbrv]{biblatex}
+\usepackage[hidelinks,pdftex,unicode]{hyperref}
+
+\urlstyle{same}
+\UseMicrotypeSet[protrusion]{basicmath}
 
 \usepackage{amsthm}
 \theoremstyle{definition}
 \newtheorem{example}{Example}[section]
 
-\UseMicrotypeSet[protrusion]{basicmath}
-\urlstyle{same}
-
-\usepackage[backend=biber,style=trad-abbrv,firstinits=true,citestyle=authoryear]{biblatex}
 \addbibresource{presentation.bib}
 
 \title{Some notes on queueing theory}
@@ -33,6 +34,7 @@
 
 \begin{document}
 \maketitle
+
 \begin{abstract}
 Queueing theory provides mathematical tools to analyse the behaviour of systems
 of agents which make and service requests. This document provides an introduction
