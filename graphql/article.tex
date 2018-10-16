@@ -1,0 +1,157 @@
+\documentclass[a4paper]{article}
+
+  \usepackage{amsmath}
+  \usepackage{bbold}
+  \usepackage{color}
+  \usepackage{fancyvrb}
+  \usepackage{graphicx}
+  \usepackage{microtype}
+  \usepackage{minted}
+  \usepackage{parskip}
+  \usepackage{tikz-cd}
+  \usepackage{upquote}
+  \usepackage{url}
+  
+  \usepackage[backend=biber,style=trad-abbrv]{biblatex}
+  \usepackage[hidelinks,pdftex,unicode]{hyperref}
+  
+  \urlstyle{same}
+  \UseMicrotypeSet[protrusion]{basicmath}
+  
+  \addbibresource{article.bib}
+  
+  \defbibenvironment{midbib}
+    {\list
+       {}
+       {\setlength{\leftmargin}{\bibhang}%
+        \setlength{\itemindent}{-\leftmargin}%
+        \setlength{\itemsep}{\bibitemsep}%
+        \setlength{\parsep}{\bibparsep}}}
+    {\endlist}
+    {\item}
+  \title{GraphQL with Sangria}
+  \author{Thomas Sutton}
+  \date{31 October 2018}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  You're trapped in a maze of twisty distributed monolith REST APIs all alike.
+  There is a small tribe of performance related Grues living in here. Maybe you
+  should try GraphQL instead? It's still something of a twisty maze but at
+  there are fewer Grues and you can see where you're going a bit more clearly.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+We've all heard about the on-going web application project which is implement as
+a collection of microservices. Most of us are probably aware that most of these
+services boil down to ``do REST to these database tables'' with the odd bit of
+``and then poke that endpoint over there''. There are one or two things that
+seem genuinely to benefit from the microservice architecture (the transcoding
+support and, maybe, the real-time notification services) but the others it
+doesn't really seem to get us much.
+
+In the rest of this talk I'll sketch [some bits of] the existing REST interface
+and point at some of its infelicities, and then talk about GraphQL and how a
+GraphQL interface to this system might look.
+
+\section{A sketch of a REST API}
+
+profile/...
+connection/...
+feeds/...
+
+\section{Denormalisation}
+
+We can make some of this better by doing the sort of thing that gets called
+``denormalisation'' in database land: embedding additional information into
+our response/s so that clients won't need to make additional requests before
+using the information. A good example is including some author profile
+information into a list of feed posts:
+
+\begin{minted}{json}
+[
+  {
+    "id": "post:121947601",
+    "author": {
+      "id": "EA717EA7-DEAD-BEEF-DEAD-DEADBEEFBEEF",
+      "name": "Thomas",
+      "avatar": "https://images.example.com/delicious-cow.jpg"
+    },
+    "title": "My favourite cows",
+    "body": "My top ten most delicious cows..."
+  }
+]
+\end{minted}
+
+This solves some of our problems -- we aren't stuck issuing $n+1$ REST queries
+to get the information we need to display the a feed page -- but only for the
+specific use case we consided when designing this denormalized view. If a client
+requires some information that we didn't think to include they'll have to fall
+back to $n+1$ queries.
+
+\section{GraphQL}
+
+Another option is to completely give up on representing objects of our model as
+HTTP resources. Instead we can treat HTTP as a transport mechanism for our own
+request/response protocols. The venerable XML-RPC and terrible SOAP protocols do
+this but their both very general. Instead solutions like GraphQL address the
+specific concern of modeling, querying and modifying graph-like data structures.
+
+Conceptually, modelling a domain type for use in a GraphQL endpoint is pretty
+similar to REST. The main difference is that we'll need to do some real work
+for fields that represent relationships between different resources (the
+``authorId'' field of a feed post, the ``profileId'' in a location, etc.)
+
+We'll need to:
+
+\begin{enumerate}
+  \item support custom scalar types so we can keep our strong internal typing.
+
+  \item describe types composed to scalar types.
+
+  \item describe relationships that can be traversed using GraphQL.
+  
+  \item support parameterised queries so we can fetch data matching criteria
+  supplied by the client.
+
+  \item support updates so that clients can modify the data.
+\end{enumerate}
+
+\section{A sketch of a GraphQL schema}
+
+I'm going to use Sangria -- a Scala GraphQL library -- here. It's pretty
+straightforward, supports marshalling to all the JSON libraries that seem
+reasonable to care about (and also jackson), and is the first solution I found
+that seemed sensible to use.
+
+\subsection{Object types}
+
+\subsection{Relations}
+
+\subsection{Updates}
+
+\section{Implementation}
+
+\begin{minted}{scala}
+  val LocationType = ObjectType(
+    "Location",
+    "A physical location clients can attend.",
+    List()
+  )
+\end{minted}
+
+\subsection{Repository code}
+
+\section{Bibliography}
+
+\nocite{*}
+
+\printbibliography[heading=none]
+
+\end{document}

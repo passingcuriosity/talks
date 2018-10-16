@@ -18,10 +18,10 @@ DEP_PATTERN:=-name '*.bib' -o -name '*.dot' -o -name '*.eps' -o -name '*.png'
 .SECONDEXPANSION:
 %.pdf: %.tex $$(shell find $$(@D) $(DEP_PATTERN))
 	cd $(@D) && \
-	pdflatex $(<F) && \
+	pdflatex -shell-escape $(<F) && \
 	biber $(*F) && \
-	pdflatex $(<F) && \
-	pdflatex $(<F)
+	pdflatex -shell-escape $(<F) && \
+	pdflatex -shell-escape $(<F)
 
 all: $(TARGETS)
 
