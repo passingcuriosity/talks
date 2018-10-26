@@ -24,6 +24,9 @@ Talks
   enough about recursion schemes to explain what a histozygomorphic prepromorphism
   does.
 
+- [*Berkeley Packet Filters*](bpf/) introduces the BPF facility and some of the
+  things it's used for in the Linux kernel.
+
 Notes
 -----
 
