@@ -79,9 +79,11 @@ there might be a fixed limit of, e.g., busses which visit the bus company
 garage.
 
 \item The {\it queue discipline} determines the order in which waiting work
-items are processed. Perhaps the most common example is ``first-in, first-out''.
+items are processed. Perhaps the most common example is ``first-in, first-out''
+but ``last-in, first-out'' and prioritised queues are also very common.
 \end{itemize}
 
+\Todo{example models}
 
 Single server vs multi server.
 
