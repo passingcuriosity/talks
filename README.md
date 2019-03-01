@@ -39,3 +39,6 @@ Notes
 
 - [*Some notes on queueing theory*](queueing/) contains notes on simple analyses
   of queueing systems.
+
+- [*Some notes on grammar and type theory*](grammar-types/) is some notes I
+  wrote after listening to a presentation to the Aristotelian Society.
