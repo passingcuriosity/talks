@@ -18,10 +18,14 @@ presentation.
 Each @Term@s of the $\lambda$-calculus is either:
 
 \begin{itemize}
-\item A lambda abstraction (i.e. function defininition)
-\item An application of one term to another (i.e. a function invocation)
 \item A variable
+\item A abstraction
+\item An application
 \end{itemize}
+
+In Haskell we'll represent this with an ADT that looks a little bit like this
+(though a real implementation will have more bits and pieces stuffed into each
+node):
 
 \begin{code}
 data Term
@@ -31,9 +35,18 @@ data Term
   deriving (Show, Eq, Ord)
 \end{code}
 
-We can evaluate these terms by substitution -- when we pass through a binder
-during the evaluation process we replace all free instances of the bound name
-in the body with the argument value.
+\subsection{Evaluation by substitution}
+
+We can evaluate these terms by substitution -- we evaluate an application to
+the body of the function with all free instances of the bound variable replaced
+by the argument value.
+
+\[
+M N \rightarrow^{*} (\lambda x. B) N \rightarrow B[x := N]
+\]
+
+We can implement this evaluation strategy in Haskell. First, we'll need a
+substitution operator:
 
 \begin{code}
 subst :: Name -> Term -> Term -> Term
@@ -47,7 +60,7 @@ subst tgt val = rec
       App fun arg                   -> App (rec fun) (rec arg)
 \end{code}
 
-Evaluation by substitution is very straightforward:
+Then evaluation by substitution is very straightforward:
 
 \begin{code}
 eval :: Term -> Either String Term
@@ -55,10 +68,11 @@ eval term = case term of
   Abs _ _                  -> Right term
   Var name                 -> Left ("Free variable: " ++ name)
   App (Abs name body) arg  -> eval (subst name arg body)
-  App _ _                  -> Left ("Can't apply non-function: " ++ show term)
+  App fn arg               -> eval fn >>= \fn' -> eval (App fn' arg)
 \end{code}
 
-This is very straightforward and works perfectly well but it's also very
-inefficient: every time evaluate an application, you rewrite the leaves of the
-tree. You can improve constant factors (e.g. skipping sub-terms that do not
-contain the target variable) but this is still fundamentally inefficient.
+This is seems straightforward and looks like it'll work perfectly well but there's
+a bug in that code and, even if it was correct, it's also very inefficient: every
+time evaluate an application, you rewrite the leaves of the tree. You can improve
+constant factors (e.g. skipping sub-terms that do not contain the target variable)
+but this is still fundamentally inefficient.

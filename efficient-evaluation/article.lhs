@@ -42,7 +42,7 @@ import Data.Function (fix)
 \urlstyle{same}
 \UseMicrotypeSet[protrusion]{basicmath}
 
-\addbibresource{presentation.bib}
+\addbibresource{article.bib}
 
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes.multipart,chains,arrows}
@@ -60,13 +60,21 @@ import Data.Function (fix)
 \maketitle
 
 \begin{abstract}
-Executing programs by direct interpretation of abstract syntax trees is
-fundamentally inefficient. In this talk I'll discuss a family of abstract
-machines for evaluating pure functional languages. Evaluators based on these
-machines are more efficient than direct interpretation but still very simple.
+In this talk I'll describe the Krivine abstract machine for executing programs
+in the $\lambda$-calculus. There are a large number of more or less similar
+machines that implement various semantics for different languages.
 \end{abstract}
 
+\tableofcontents
+
 \section{Introduction}
+
+Executing programs by direct interpretation of abstract syntax trees is
+fundamentally inefficient and, even if it weren't, evaluation by substitution
+is fiddley.
+In this talk I'll discuss a family of abstract
+machines for evaluating pure functional languages. Evaluators based on these
+machines are more efficient than direct interpretation but still very simple.
 
 %include LC.lhs
 
@@ -93,5 +101,13 @@ main = putStrLn "hello"
 
 %include LC/Fmt.lhs
 %include DB/Fmt.lhs
+
+\clearpage
+
+\section{Bibliography}
+
+\nocite{*}
+
+\printbibliography[heading=none]
 
 \end{document}
