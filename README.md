@@ -2,10 +2,8 @@ Words
 =====
 
 This repository contains some notes I've written on various topics before
-giving or after seeing talks on topics that interest me.
-
-They are variously incomplete, incorrect, or otherwise unsuitable for others,
-but they are here.
+giving or after seeing talks on topics that interest me. They are variously
+incomplete, incorrect, or otherwise unsuitable for others, but they are here.
 
 To produce PDFs: install `lhs2TeX` and a sufficiently comprehensive modern
 TeX distribution and run `make`.
@@ -42,3 +40,6 @@ Notes
 
 - [*Some notes on grammar and type theory*](grammar-types/) is some notes I
   wrote after listening to a presentation to the Aristotelian Society.
+
+- [*Linear programming and the simplex method*](simplex/) contains notes on the
+  simplex method for solving linear programming problems.
