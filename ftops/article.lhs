@@ -118,8 +118,6 @@ and produces an int.
 
 \graphicx{hope}
 
-
-
 \section{Bibliography}
 
 \nocite{*}
