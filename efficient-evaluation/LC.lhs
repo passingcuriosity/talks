@@ -76,3 +76,11 @@ a bug in that code and, even if it was correct, it's also very inefficient: ever
 time evaluate an application, you rewrite the leaves of the tree. You can improve
 constant factors (e.g. skipping sub-terms that do not contain the target variable)
 but this is still fundamentally inefficient.
+
+\subsection{Evaluation with an environment}
+
+We can avoid a lot of the inefficiency by using an explicit environment
+instead of substitution.
+
+This is still pretty awkward (you can run into the same bug as above) and still
+not that great for speed, so I won't describe it any further.

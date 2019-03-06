@@ -26,11 +26,38 @@ import Data.Function (fix)
 \usepackage{color}
 \usepackage{fancyvrb}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage{microtype}
 \usepackage{parskip}
 \usepackage{tikz-cd}
 \usepackage{upquote}
 \usepackage{url}
+\usepackage{listings}
+
+\lstset{
+  frame=none,
+  xleftmargin=2pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\ttfamily\tiny\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=haskell,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\small\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
+
+\geometry{a4paper, margin=1in}
 
 \usepackage[backend=biber,style=trad-abbrv]{biblatex}
 \usepackage[hidelinks,pdftex,unicode]{hyperref}
@@ -71,10 +98,9 @@ machines that implement various semantics for different languages.
 
 Executing programs by direct interpretation of abstract syntax trees is
 fundamentally inefficient and, even if it weren't, evaluation by substitution
-is fiddley.
-In this talk I'll discuss a family of abstract
-machines for evaluating pure functional languages. Evaluators based on these
-machines are more efficient than direct interpretation but still very simple.
+is fiddley. In this talk I'll discuss a family of abstract machines for
+evaluating pure functional languages. Evaluators based on these machines are
+more efficient than direct interpretation but still very simple.
 
 %include LC.lhs
 
@@ -90,7 +116,8 @@ machines are more efficient than direct interpretation but still very simple.
 import qualified LC
 import qualified DB
 import Compile
-import Krivine
+import qualified Krivine.Normal as Normal
+import qualified Krivine.Eager as Eager
 
 main :: IO ()
 main = putStrLn "hello"
