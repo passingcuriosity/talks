@@ -20,11 +20,16 @@ binder, the variable $\mathbb{2}$ by the next, etc.
   \lambda x. \lambda y. \lambda z. z \equiv \lambda \lambda \lambda 1
 \]
 \[
-  \lambda x. \lambda y. \lambda y. y \equiv \lambda \lambda \lambda 2
+  \lambda x. \lambda y. \lambda z. y \equiv \lambda \lambda \lambda 2
 \]
 \[
-  \lambda x. \lambda y. \lambda x. y \equiv \lambda \lambda \lambda 3
+  \lambda x. \lambda y. \lambda z. x \equiv \lambda \lambda \lambda 3
 \]
+
+\[
+  \lambda x. \lambda y. y x \equiv \lambda \lambda \lambda 1 2
+\]
+
 
 \begin{code}
 data Term
