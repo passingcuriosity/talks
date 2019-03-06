@@ -1,6 +1,13 @@
-{-# LANGUAGE LambdaCase, FlexibleInstances #-}
 \documentclass[a4paper]{article}
 %include polycode.fmt
+%if False
+
+\begin{code}
+{-# LANGUAGE LambdaCase, FlexibleInstances #-}
+module Main where
+\end{code}
+
+%endif
 
 \usepackage{amsmath}
 \usepackage{bbold}
@@ -74,15 +81,15 @@ We can represent this language with an interface which has standard abstraction
 
 \begin{code}
 class Lambda repr where
-  lam :: repr -> repr               -- \....
-  app :: repr -> repr -> repr       -- (...) (...)
+  lam :: repr -> repr
+  app :: repr -> repr -> repr
 
-  vz :: repr                        -- x_0
-  vs :: repr -> repr                -- x_(n+1)
+  vz :: repr
+  vs :: repr -> repr
 
-  int :: Int -> repr                -- 12
-  inc :: repr                       -- "... + 1"
-  ifz :: repr                       -- ifz ... then ... else ...
+  int :: Int -> repr
+  inc :: repr
+  ifz :: repr
 \end{code}
 
 \section{An implementation}
@@ -108,6 +115,7 @@ instance Lambda ([V] -> V) where
 
   lam e      = \ env -> A (\x -> e (x:env))
   app e1 e2  = \ env -> case e1 env of A f -> f (e2 env)
+
 \end{code}
 
 Hopefully you can kind of follow what's going on here. Every "value" is a
@@ -116,7 +124,6 @@ partially applied function). This being an untyped language we'll just have to
 hope that evaluating a program yields a result that doesn't need any more input
 and produces an int.
 
-\graphicx{hope}
 
 \section{Bibliography}
 
