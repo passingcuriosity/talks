@@ -19,11 +19,48 @@ import Prelude hiding (LT, GT, EQ)
 \end{code}
 %endif
 
-\section{Specifying problems}
+\subsection{Specifying problems}
+
+We'll need to describe the objectives and constraints of a problem. Both are
+essentially linear functions labelled in various ways, so we'll start with a
+way to express linear functions.
 
 \begin{code}
-data Var = Var
-    deriving (Eq, Show)
+
+data Expr (n :: Bool) where
+    K  ::  Double                ->  Expr False
+    V  ::  Double   ->   Var     ->  Expr True
+    S  ::  Expr a   ->   Expr b  ->  Expr (Or a b)
+\end{code}
+
+An objective is
+
+\begin{code}
+type NonEmptyList a = (a, [a])
+
+type Var = String
+type Fn = NonEmptyList (Double, Var)
+
+data Objective = Maximise Fn | Minimise Fn
+\end{code}
+
+A constraint is
+
+\begin{code}
+data Rel = LT | LTE | EQ | GT | GTE | GT deriving (Eq, Show)
+
+type Constraint = (Fn, Rel, Double)
+\end{code}
+
+A problem then is:
+
+\begin{code}
+type Problem = (Objective, NonEmptyList Constraint)
+\end{code}
+
+
+\begin{code}
+data Var = Var deriving (Eq, Show)
 
 data Expr
     = V Var
@@ -38,11 +75,8 @@ type family Linear (n :: Nat) where
 
 \subsection{Representing optimisation objectives}
 
-We'll need a way to specify a linear function
-
 \begin{code}
-data Dir = Max | Min
-  deriving (Eq, Show)
+data Dir = Max | Min deriving (Eq, Show)
 
 data Objective n = Objective 
     { direction :: Dir
@@ -118,8 +152,7 @@ prob = do
     minimiseM $ a + b - c
 \end{code}
 
-\begin{example}
-
+\begin{code}
 solve $ \x y z ->
     minimise $ 12 * x - 3 y + z
     <:> x + y + z `gte` 10
@@ -127,5 +160,4 @@ solve $ \x y z ->
     <&> x `gte` 0
     <&> y `gte` 10
     <&> y `lte` 100
-
-\end{example}
+\end{code}
