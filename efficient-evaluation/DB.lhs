@@ -3,7 +3,6 @@
 module DB where
 
 type Nat = Int
-type Name = String
 
 \end{code}
 %endif
@@ -44,5 +43,9 @@ the sort of thing they mean.
 
 \subsection{Evaluating}
 
-You can take a similar approach to evaluating with an explicit environment.
-Instead of a map of names to values you'd use a vector of values.
+Like the $\lambda$-calculus with names, we can also evaluate these expressions
+using an explicit environment.
+
+
+Instead of a map associating names to values (@Map Name Closure@ in our case)
+ use a vector of values.
