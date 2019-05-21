@@ -16,10 +16,14 @@ DEP_PATTERN:=-name '*.bib' -o -name '*.dot' -o -name '*.eps' -o -name '*.png'
 	cd $(@D) && lhs2TeX -o $(@F) $(<F)
 
 .SECONDEXPANSION:
+%.tex: %.md
+	cd $(@D) && pandoc -s -o $(@F) $(<F)
+
+.SECONDEXPANSION:
 %.pdf: %.tex $$(shell find $$(@D) $(DEP_PATTERN))
 	cd $(@D) && \
 	lualatex -shell-escape $(<F) && \
-	biber $(*F) && \
+	( grep -q "addbibresource" $(<F) && biber $(*F); ) && \
 	lualatex -shell-escape $(<F) && \
 	lualatex -shell-escape $(<F)
 
