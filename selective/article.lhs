@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[12ptfont,a4paper]{article}
 %include polycode.fmt
 
 %if False
@@ -49,34 +49,59 @@ depending on the degree of freedom (and commensurate lack of language-assisted
 safety) we want.
 
 \begin{itemize}
-\item Programming against \typeclass{Functor}s allows us to describe standalone
+
+\item
+Programming against \typeclass{Functor}s allows us to describe standalone
 computations.
 
-\item Programming against \typeclass{Applicative} functors allows us to describe
-``static'' graphs
-of computations (where we can combined several effectful computations, but
-they must be known statically at compile time).
+\item
+Programming against \typeclass{Applicative} functors allows us to describe
+``static'' graphs of computations (where we can combined several effectful
+computations, but they must be known statically at compile time).
 
-\item Programming against \typeclass{Monad} allows us to describe ``dynamic'' graphs of
-   computations (where runtime results can result in a different ``shape'' of
-   computation).
+\item
+Programming against \typeclass{Monad} allows us to describe ``dynamic'' graphs
+of computations (where runtime results can result in a different ``shape'' of
+computation).
 \end{itemize}
 
 \typeclass{Selective} functors slot into this hierarchy of expressive power between 
 Applicative Functors and Monads: they require the programmer to declare the
 shape of an effectful computation statically (like Applicative Functors) but
 allow the effects to be executed (or not) dynamically (like Monad).
+
 \end{abstract}
 
 \section{Introduction}
 
 \section{\typeclass{Functor} - atomic effects}
 
+\begin{code}
+instance Functor f where
+  fmap :: (a -> b) -> f a -> f b
+\end{code}
+
 \section{\typeclass{Applicative} - multiple static effects}
+
+\begin{code}
+instance (Functor f) => Applicative f where
+  pure :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+\end{code}
 
 \section{\typeclass{Monad} - multiple dynamic effects}
 
-\section{\typeclass{Selective} - multiple static, dynamically selected effects}
+\begin{code}
+class (Applicative f) => Monad f where
+  (>>=) :: m a -> (a -> m b) -> m b
+\end{code}
+
+\section{\typeclass{Selective} - multiple static selected effects}
+
+\begin{code}
+instance (Applicative f) => Selective f where
+  select :: f (Either a b) -> f (a -> b) -> f b
+\end{code}
 
 \section{Bibliography}
 
