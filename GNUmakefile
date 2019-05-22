@@ -5,7 +5,8 @@
 
 LHS_SOURCES:=$(shell grep -l "%include polycode.fmt" $(shell find * -name "*.lhs"))
 TEX_SOURCES:=$(shell grep -El "[\\]documentclass" $(shell find * -name "*.tex"))
-TARGETS:=$(LHS_SOURCES:.lhs=.pdf) $(TEX_SOURCES:.tex=.pdf)
+MD_SOURCES:=$(shell grep -El "^title: " $(shell find * -name "*.md"))
+TARGETS:=$(LHS_SOURCES:.lhs=.pdf) $(TEX_SOURCES:.tex=.pdf) $(MD_SOURCES:.md=.pdf)
 
 # find(1) operators to match possible dependency files. Add additional patterns
 # by following the obvious pattern.

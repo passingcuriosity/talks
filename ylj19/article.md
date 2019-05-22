@@ -4,11 +4,17 @@ author: Thomas Sutton
 date: 22 May 2019
 ---
 
-I went to Yow Lambda Jam 2019 in Melbourne last week and this is a short
-roundup of the talks and workshops that I attended. Overall I thought it was
-not quite so good a programme as last year, but there were a nice range of
-talks on some interesting topics. These are some notes and observations on
-my favourite talks on the programme.
+YOW! Lambda Jam 2019 was on in Melbourne last week. Jed, Dave, Tin, and I all
+attended (some of us with a bit more forththought and planning than others).
+
+Overall I thought the programme was not quite as good as last year, but there
+were a nice range of talks on some interesting topics. This is a roundup of my
+highlights from the programme.
+
+I'll cover them in something approximating the degree of recommendedness but
+the ranking is as much due to the topics as to the talks themselves.
+
+YMMV
 
 ## Bartosz Milewski - A taste of type theory
 
@@ -93,27 +99,6 @@ Recommended if you like Phil, Agda, programming language theory, theorm proving,
 Emacs, etc.
 
 > Lambda Man made his regular appearance.
-
-## Edward Kmett - Logic programming a la carte
-
-Ed Kmett have a long, breakneck talk about things he's is doing in implementing
-a scalable logic programming system. It touched -- very briefly and very, very
-quickly -- on a lot of ground and linked back to his previous talks on
-propagators and a bunch of other stuff.
-
-The crux of it is that the recent cottage industry of logic programming embedded
-into functional programming lanaguages (spawned by Oleg's work and popularised
-in The Reasoned Schemer) is hamstrung due some the implementation techniques
-used. Ed is using state of the art in a lot of fields to make a system that can
-solve more problems faster.
-
-Lots of stuff about logic programming over programs (program synthesis),
-efficient implementation of logic variables, union-find implementation, etc.
-
-If you've run out of areas of computer science and mathematics to read about,
-this might be a good source of material to keep you busy for 12 months or so.
-
-Apparently Ed's been doing lots of live coding on twitch.tv/ekmett
 
 ## Ben Lippmeier - Types (are / want to be) calling conventions
 
@@ -237,6 +222,27 @@ It has an interface *inspired by* comonad, but not an actual instance.
 
 > This was a good talk about a practical, pragmatic library addressing concerns
 > that almost all applications. Turns out functors are useful.
+
+## Edward Kmett - Logic programming a la carte
+
+Ed Kmett have a long, breakneck talk about things he's is doing in implementing
+a scalable logic programming system. It touched -- very briefly and very, very
+quickly -- on a lot of ground and linked back to his previous talks on
+propagators and a bunch of other stuff.
+
+The crux of it is that the recent cottage industry of logic programming embedded
+into functional programming lanaguages (spawned by Oleg's work and popularised
+in The Reasoned Schemer) is hamstrung due some the implementation techniques
+used. Ed is using state of the art in a lot of fields to make a system that can
+solve more problems faster.
+
+Lots of stuff about logic programming over programs (program synthesis),
+efficient implementation of logic variables, union-find implementation, etc.
+
+If you've run out of areas of computer science and mathematics to read about,
+this might be a good source of material to keep you busy for 12 months or so.
+
+Apparently Ed's been doing lots of live coding on twitch.tv/ekmett
 
 ## All the blockchains
 
