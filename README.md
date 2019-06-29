@@ -24,6 +24,10 @@ Talks
 
 - [*Berkeley Packet Filters*](bpf/) introduces the BPF facility and some of the
   things it's used for in the Linux kernel.
+  
+- [*Effecient evaluation of pure lambda calculi*](efficient-evaluation/) needs a
+  better title. It describes two Krivine machines for executing lambda calculus terms
+  lazily and eagerly.
 
 Notes
 -----
@@ -43,3 +47,4 @@ Notes
 
 - [*Linear programming and the simplex method*](simplex/) contains notes on the
   simplex method for solving linear programming problems.
+

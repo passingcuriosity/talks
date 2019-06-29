@@ -70,8 +70,6 @@ import Data.Type.Equality
 
 \section{Introduction}
 
-A linear programming problem is 
-
 Linear programming is a field of optimisation which addresses problems expressed
 in terms of systems of linear inequalities. This class of problems has several
 interesting properties:
@@ -83,21 +81,23 @@ interesting properties:
 
 \section{Linear programming}
 
-\section{Simplex method}
+\section{\algorithm{Simplex} method}
 
-The \algorithm{simplex method} is a decidable method for finding the optimal
+The \algorithm{simplex method} is a decidable algorithm for finding the optimal
 solution (if one exists) to a linear programming problem. The basic algorithm
 goes like this:
 
 \begin{enumerate}
-\item Construct a tableau
-\item Use row operations to eliminate 
+\item Normalise the problem into a canonical form
+\item Build a tableau describing the canonicalised problem
+\item Use row operations to eliminate
 \end{enumerate}
 
 \section{Implementation}
 
-\begin{example}
+%include DSL.lhs
 
+\begin{code}
 problem = do
   a <- var "a"
   b <- var "b"
@@ -109,9 +109,6 @@ problem = do
   a `bounded` (1,20)
 
   minimise $ a
-\end{example}
-
-\begin{example}
 
 data Objective n = Objective { direction :: Dir, fn :: Linear n }
 data Constraint n = Constraint { fn :: Linear n, rel :: Rel, val :: Value}
@@ -129,19 +126,13 @@ data instance Linear 0 = forall v. Expr v
 data instance Linear (Succ n) = Var -> Linear n
 
 maximise (\a b c d -> 12 * a + 14 )
-\end{example}
-
-\begin{code}
 
 
-\end{code}
-
-\begin{example}
 prob = do 
   maximise $ \a b c d -> 2 * a + 3 * b - 12 * c - d
   constrain $ \a b c d -> 12 * a `leq` 90
   constrain $ \a b c d -> a + b + c + d `leq` 100
-\end{example}
+\end{code}
 
 \appendix
 

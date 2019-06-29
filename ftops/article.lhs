@@ -9,6 +9,12 @@ module Main where
 
 %endif
 
+%if False
+\begin{code}
+{-# LANGUAGE LambdaCase, FlexibleInstances #-}
+\end{code}
+%endif
+
 \usepackage{amsmath}
 \usepackage{bbold}
 \usepackage{color}
@@ -49,6 +55,7 @@ module Main where
 }
 
 \begin{document}
+
 \maketitle
 
 \begin{abstract}
@@ -123,7 +130,6 @@ computation that takes some inputs and produces a result (either an int or a
 partially applied function). This being an untyped language we'll just have to
 hope that evaluating a program yields a result that doesn't need any more input
 and produces an int.
-
 
 \section{Bibliography}
 
