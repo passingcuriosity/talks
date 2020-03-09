@@ -10,7 +10,7 @@ TARGETS:=$(LHS_SOURCES:.lhs=.pdf) $(TEX_SOURCES:.tex=.pdf) $(MD_SOURCES:.md=.pdf
 
 # find(1) operators to match possible dependency files. Add additional patterns
 # by following the obvious pattern.
-DEP_PATTERN:=-name '*.bib' -o -name '*.dot' -o -name '*.eps' -o -name '*.png'
+DEP_PATTERN:=-name '*.bib' -o -name '*.dot' -o -name '*.eps' -o -name '*.png' -o -iname '*.jpg'
 
 .SECONDEXPANSION:
 %.tex: %.lhs $$(shell find $$(@D) -name '*.lhs' ! -name '$$(<F)')
