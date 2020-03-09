@@ -1,5 +1,13 @@
 \documentclass[a4paper]{article}
 %include polycode.fmt
+%if False
+
+\begin{code}
+{-# LANGUAGE LambdaCase, FlexibleInstances #-}
+module Main where
+\end{code}
+
+%endif
 
 %if False
 \begin{code}
@@ -83,12 +91,12 @@ class Lambda repr where
   lam :: repr -> repr
   app :: repr -> repr -> repr
 
-  vz :: repr                 
-  vs :: repr -> repr         
+  vz :: repr
+  vs :: repr -> repr
 
-  int :: Int -> repr         
-  inc :: repr                
-  ifz :: repr                
+  int :: Int -> repr
+  inc :: repr
+  ifz :: repr
 \end{code}
 
 \section{An implementation}
@@ -114,6 +122,7 @@ instance Lambda ([V] -> V) where
 
   lam e      = \ env -> A (\x -> e (x:env))
   app e1 e2  = \ env -> case e1 env of A f -> f (e2 env)
+
 \end{code}
 
 Hopefully you can kind of follow what's going on here. Every "value" is a
